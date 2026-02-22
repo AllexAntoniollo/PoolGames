@@ -9,6 +9,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/Ownable2Step.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import "hardhat/console.sol";
 
 struct UserStruct {
     bool registered;
@@ -27,10 +28,9 @@ contract UserPoolGames is Ownable2Step, ReentrancyGuard {
     event UserAdded(address indexed user, address indexed sponsor);
 
     mapping(address => UserStruct) private users;
-    mapping(address => uint) public userTotalEarned;
 
-    IERC20 private usdc;
-    address private treasuryPool;
+    IERC20 private immutable usdc;
+    ITreasuryPool private treasuryPool;
 
     constructor(address _usdc) Ownable(msg.sender) {
         require(_usdc != address(0), "Cannot be zero");
@@ -81,7 +81,8 @@ contract UserPoolGames is Ownable2Step, ReentrancyGuard {
         return users[_address];
     }
     function setTreasuryPool(address newPool) external onlyOwner {
-        treasuryPool = newPool;
+        // require(address(treasuryPool) == address(0));
+        treasuryPool = ITreasuryPool(newPool);
     }
 
     function increaseDirectMember(address user) external {
@@ -101,13 +102,13 @@ contract UserPoolGames is Ownable2Step, ReentrancyGuard {
         for (uint8 i = 1; i <= 20; i++) {
             uint share = (amount * getPercentageByLevel(i)) / 100;
             address _user = levels[i - 1];
+
             if (
                 users[_user].directs >= getDirectsRequiredByLevel(i) &&
-                ITreasuryPool(_user).valueInPool(_user) >=
+                treasuryPool.valueInPool(_user) >=
                 getPoolValueRequiredByLevel(i)
             ) {
                 usdc.safeTransfer(_user, share);
-                userTotalEarned[_user] += share;
             } else {
                 excess += share;
             }

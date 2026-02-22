@@ -50,7 +50,7 @@ contract TreasuryPool is ReentrancyGuard, Ownable2Step {
         usdc = IERC20(_usdc);
     }
     function setUser(address userAddress) external onlyOwner {
-        require(address(userAddress) == address(0));
+        require(address(userContract) == address(0));
         userContract = IUserPoolGames(userAddress);
     }
 
@@ -114,12 +114,12 @@ contract TreasuryPool is ReentrancyGuard, Ownable2Step {
         address user,
         uint amount,
         DonatePlan plan
-    ) internal {
+    ) internal returns (uint profit) {
         PlanConfig memory config = getPlanConfig(plan);
 
         uint id = users[msg.sender].length;
 
-        uint profit = (amount * config.profitPercent) / 1000;
+        profit = (amount * config.profitPercent) / 1000;
         uint totalReturn = amount + profit;
 
         users[user].push(
@@ -138,21 +138,26 @@ contract TreasuryPool is ReentrancyGuard, Ownable2Step {
     }
 
     function contribute(uint amount, DonatePlan plan) external nonReentrant {
+        UserStruct memory aux = userContract.getUser(msg.sender);
+
+        require(aux.registered, "Not registered");
         require(
-            amount >= MIN_ROOF && amount <= MAX_ROOF,
+            amount >= MIN_ROOF && valueInPool[msg.sender] + amount <= MAX_ROOF,
             "Min 10 USDC / Max 10.000 USDC"
         );
         valueInPool[msg.sender] += amount;
         usdc.safeTransferFrom(msg.sender, address(this), amount);
 
-        _createDonation(msg.sender, amount, plan);
+        uint profit = _createDonation(msg.sender, amount, plan);
 
         emit UserContributed(msg.sender, amount);
-        UserStruct memory aux = userContract.getUser(msg.sender);
         if (valueInPool[msg.sender] >= 100e6 && !aux.valid) {
             userContract.increaseDirectMember(aux.levels[0]);
             userContract.setValid(msg.sender);
         }
+
+        usdc.approve(address(userContract), (profit * 75) / 100);
+        userContract.distributeUnilevel(msg.sender, profit);
     }
 
     function getActiveContributions(

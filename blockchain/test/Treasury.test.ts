@@ -17,6 +17,23 @@ describe("Treasury", function () {
     const TreasuryPool = await ethers.getContractFactory("TreasuryPool");
     const contract = await TreasuryPool.deploy(usdtAddress);
     const contractAddress = await contract.getAddress();
+
+    const FeeManager = await ethers.getContractFactory("FeeManager");
+
+    const feeManager = await FeeManager.deploy();
+
+    const feeManagerAddress = await feeManager.getAddress();
+    await feeManager.addToken(usdtAddress, "USDT");
+    const UserContract = await ethers.getContractFactory("UserPoolGames");
+
+    const contractUser = await UserContract.deploy(usdtAddress);
+
+    const contractUserAddress = await contractUser.getAddress();
+
+    await contract.setUser(contractUserAddress);
+    await contractUser.setManager(feeManagerAddress);
+    await contractUser.setTreasuryPool(contractAddress);
+
     await usdt.mint(ethers.parseUnits("1000000", 6));
     await usdt.transfer(contractAddress, ethers.parseUnits("10000", 6));
     return {
@@ -26,6 +43,8 @@ describe("Treasury", function () {
       usdt,
       contract,
       contractAddress,
+      contractUser,
+      contractUserAddress,
     };
   }
 
@@ -48,6 +67,23 @@ describe("Treasury", function () {
       await contract.calculateDaysElapsedToClaim(owner.address, 0),
     ).to.be.equal(1);
     await contract.claimContribution(0);
+  });
+  it("should not contribute not registered", async function () {
+    const { owner, otherAccount, another, usdt, contract, contractAddress } =
+      await loadFixture(deployFixture);
+    await expect(
+      contract.connect(otherAccount).contribute(ethers.parseUnits("100", 6), 0),
+    ).to.be.revertedWith("Not registered");
+  });
+  it("should not contribute invalid value", async function () {
+    const { owner, otherAccount, another, usdt, contract, contractAddress } =
+      await loadFixture(deployFixture);
+    await expect(
+      contract.contribute(ethers.parseUnits("1", 6), 0),
+    ).to.be.revertedWith("Min 10 USDC / Max 10.000 USDC");
+    await expect(
+      contract.contribute(ethers.parseUnits("10001", 6), 0),
+    ).to.be.revertedWith("Min 10 USDC / Max 10.000 USDC");
   });
   it("should contribute 5 day", async function () {
     const { owner, otherAccount, another, usdt, contract, contractAddress } =
@@ -157,6 +193,9 @@ describe("Treasury", function () {
     );
 
     await time.increase(24 * 30 * 60 * 60);
+    expect(
+      await contract.timeUntilNextWithdrawal(owner.address, 0),
+    ).to.be.equal(0);
 
     expect(
       await contract.calculateDaysElapsedToClaim(owner.address, 0),
@@ -182,6 +221,9 @@ describe("Treasury", function () {
     await expect(contract.claimContribution(0)).to.be.revertedWith(
       "Already claimed",
     );
+    expect(
+      await contract.timeUntilNextWithdrawal(owner.address, 0),
+    ).to.be.equal(0);
   });
   it("should contribute 360 day", async function () {
     const { owner, otherAccount, another, usdt, contract, contractAddress } =
@@ -213,5 +255,61 @@ describe("Treasury", function () {
     await expect(contract.claimContribution(0)).to.be.revertedWith(
       "Already claimed",
     );
+  });
+  it("should test unilevel", async function () {
+    const {
+      owner,
+      otherAccount,
+      another,
+      usdt,
+      contract,
+      contractAddress,
+      contractUser,
+    } = await loadFixture(deployFixture);
+    const wallets: any[] = [owner];
+
+    for (let index = 0; index < 20; index++) {
+      const wallet = ethers.Wallet.createRandom().connect(ethers.provider);
+      wallets.push(wallet);
+
+      await owner.sendTransaction({
+        to: wallet.address,
+        value: ethers.parseEther("1"),
+      });
+
+      await contractUser.connect(wallet).createUser(wallets[index].address);
+      await usdt.mint(ethers.parseUnits("2000", 6));
+      await usdt.transfer(wallet.address, ethers.parseUnits("2000", 6));
+      await usdt
+        .connect(wallet)
+        .approve(contractAddress, ethers.parseUnits("2000", 6));
+      await contract
+        .connect(wallet)
+        .contribute(ethers.parseUnits("2000", 6), 0);
+    }
+    await contractUser.setTreasuryPool(owner.address);
+    for (let index = 0; index < wallets.length; index++) {
+      for (let j = 0; j < 19; j++) {
+        await contractUser.increaseDirectMember(wallets[index].address);
+      }
+    }
+    await contractUser.setTreasuryPool(contractAddress);
+    await usdt.approve(contractAddress, ethers.parseUnits("2000", 6));
+    await contract.contribute(ethers.parseUnits("2000", 6), 0);
+    await usdt.mint(ethers.parseUnits("2000", 6));
+    await usdt.transfer(
+      wallets[wallets.length - 1].address,
+      ethers.parseUnits("2000", 6),
+    );
+    await usdt
+      .connect(wallets[wallets.length - 1])
+      .approve(contractAddress, ethers.parseUnits("2000", 6));
+    console.log(
+      await contractUser.getUser(wallets[wallets.length - 1].address),
+    );
+
+    await contract
+      .connect(wallets[wallets.length - 1])
+      .contribute(ethers.parseUnits("1000", 6), 0);
   });
 });

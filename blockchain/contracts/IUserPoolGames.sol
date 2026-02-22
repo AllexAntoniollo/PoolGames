@@ -15,4 +15,5 @@ interface IUserPoolGames {
     ) external view returns (UserStruct memory);
     function increaseDirectMember(address user) external;
     function setValid(address user) external;
+    function distributeUnilevel(address user, uint amount) external;
 }
