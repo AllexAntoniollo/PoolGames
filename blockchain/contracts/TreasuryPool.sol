@@ -53,21 +53,31 @@ contract TreasuryPool is ReentrancyGuard, Ownable2Step {
         uint index
     ) public view returns (uint256) {
         require(index < users[user].length, "Invalid Index");
+
         UserDonation memory userDonation = users[user][index];
-        if (userDonation.daysPaid == users[user][index].maxPeriod) {
+
+        if (userDonation.daysPaid >= userDonation.maxPeriod) {
             return 0;
         }
-        uint daysElapsed = calculateDaysElapsedToClaim(user, index);
-        if (daysElapsed >= userDonation.maxPeriod) {
+
+        uint256 timeSinceLastClaim = block.timestamp -
+            userDonation.lastClaimTimestamp;
+
+        uint256 claimInterval = 30 days;
+
+        if (timeSinceLastClaim >= claimInterval) {
             return 0;
         }
-        if (userDonation.daysPaid + daysElapsed == userDonation.maxPeriod) {
-            return 0;
-        }
-        return
-            userDonation.lastClaimTimestamp +
-            (userDonation.maxPeriod * 1 days) -
-            block.timestamp;
+
+        uint256 remainingDays = userDonation.maxPeriod - userDonation.daysPaid;
+
+        uint256 maxAllowedInterval = remainingDays * 1 days;
+
+        uint256 effectiveInterval = claimInterval < maxAllowedInterval
+            ? claimInterval
+            : maxAllowedInterval;
+
+        return effectiveInterval - timeSinceLastClaim;
     }
     function getPlanConfig(
         DonatePlan plan
@@ -262,23 +272,14 @@ contract TreasuryPool is ReentrancyGuard, Ownable2Step {
         );
 
         uint periodElapsed = calculateDaysElapsedToClaim(msg.sender, index);
-
+        if (periodElapsed > 30) {
+            periodElapsed = 30;
+        }
         users[msg.sender][index].daysPaid += periodElapsed;
         users[msg.sender][index].lastClaimTimestamp =
             users[msg.sender][index].startedTimestamp +
             (users[msg.sender][index].daysPaid * 1 days);
         uint totalValueInUSD = calculateValue(msg.sender, index, periodElapsed);
-
-        if (
-            users[msg.sender][index].valueClaimed + totalValueInUSD >
-            users[msg.sender][index].balance
-        ) {
-            totalValueInUSD =
-                users[msg.sender][index].balance -
-                users[msg.sender][index].valueClaimed;
-        }
-
-        users[msg.sender][index].valueClaimed += totalValueInUSD;
 
         uint fee = totalValueInUSD / 10;
         if (
@@ -288,6 +289,7 @@ contract TreasuryPool is ReentrancyGuard, Ownable2Step {
             totalValueInUSD += userDonation.deposit;
             valueInPool[msg.sender] -= userDonation.deposit;
         }
+        users[msg.sender][index].valueClaimed += totalValueInUSD;
 
         usdc.safeTransfer(msg.sender, (totalValueInUSD - fee));
 
