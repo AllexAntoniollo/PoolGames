@@ -109,6 +109,7 @@ contract UserPoolGames is Ownable2Step, ReentrancyGuard {
                 getPoolValueRequiredByLevel(i)
             ) {
                 usdc.safeTransfer(_user, share);
+                treasuryPool.increaseProfitUnilevel(_user, share);
             } else {
                 excess += share;
             }

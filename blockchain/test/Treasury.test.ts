@@ -311,5 +311,12 @@ describe("Treasury", function () {
     await contract
       .connect(wallets[wallets.length - 1])
       .contribute(ethers.parseUnits("1000", 6), 0);
+
+    console.log(await contract.totalProfitToClaim(owner.address));
+    console.log(await contract.totalUnilevelProfit(owner.address));
+    await time.increase(24 * 60 * 60);
+    await contract.claimContribution(0);
+    console.log(await contract.totalProfitToClaim(owner.address));
+    console.log(await contract.totalUnilevelProfit(owner.address));
   });
 });

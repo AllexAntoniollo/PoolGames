@@ -45,6 +45,8 @@ contract TreasuryPool is ReentrancyGuard, Ownable2Step {
 
     mapping(address => UserDonation[]) private users;
     mapping(address => uint) public valueInPool;
+    mapping(address => uint) public totalProfitToClaim;
+    mapping(address => uint) public totalUnilevelProfit;
 
     constructor(address _usdc) Ownable(msg.sender) {
         usdc = IERC20(_usdc);
@@ -84,6 +86,14 @@ contract TreasuryPool is ReentrancyGuard, Ownable2Step {
             : maxAllowedInterval;
 
         return effectiveInterval - timeSinceLastClaim;
+    }
+    function increaseProfitUnilevel(address user, uint amount) external {
+        require(msg.sender == address(userContract));
+
+        totalUnilevelProfit[user] += amount;
+        if (totalUnilevelProfit[user] > totalProfitToClaim[user]) {
+            totalUnilevelProfit[user] = totalProfitToClaim[user];
+        }
     }
     function getPlanConfig(
         DonatePlan plan
@@ -149,7 +159,7 @@ contract TreasuryPool is ReentrancyGuard, Ownable2Step {
         usdc.safeTransferFrom(msg.sender, address(this), amount);
 
         uint profit = _createDonation(msg.sender, amount, plan);
-
+        totalProfitToClaim[msg.sender] += profit;
         emit UserContributed(msg.sender, amount);
         if (valueInPool[msg.sender] >= 100e6 && !aux.valid) {
             userContract.increaseDirectMember(aux.levels[0]);
@@ -296,19 +306,28 @@ contract TreasuryPool is ReentrancyGuard, Ownable2Step {
             users[msg.sender][index].startedTimestamp +
             (users[msg.sender][index].daysPaid * 1 days);
         uint totalValueInUSD = calculateValue(msg.sender, index, periodElapsed);
+        users[msg.sender][index].valueClaimed += totalValueInUSD;
 
-        uint fee = totalValueInUSD / 10;
+        if (totalUnilevelProfit[msg.sender] >= totalValueInUSD) {
+            totalUnilevelProfit[msg.sender] -= totalValueInUSD;
+            totalProfitToClaim[msg.sender] -= totalValueInUSD;
+            totalValueInUSD = 0;
+        } else {
+            totalProfitToClaim[msg.sender] -= totalValueInUSD;
+            totalValueInUSD -= totalUnilevelProfit[msg.sender];
+            totalUnilevelProfit[msg.sender] = 0;
+        }
         if (
             users[msg.sender][index].daysPaid ==
             users[msg.sender][index].maxPeriod
         ) {
             totalValueInUSD += userDonation.deposit;
+            users[msg.sender][index].valueClaimed += userDonation.deposit;
+
             valueInPool[msg.sender] -= userDonation.deposit;
         }
-        users[msg.sender][index].valueClaimed += totalValueInUSD;
 
-        usdc.safeTransfer(msg.sender, (totalValueInUSD - fee));
-
+        usdc.safeTransfer(msg.sender, (totalValueInUSD));
         emit UserClaimed(msg.sender, totalValueInUSD);
     }
 
