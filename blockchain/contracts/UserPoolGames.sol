@@ -30,6 +30,7 @@ contract UserPoolGames is Ownable2Step, ReentrancyGuard {
     mapping(address => uint) public userTotalEarned;
 
     IERC20 private usdc;
+    address private treasuryPool;
 
     constructor(address _usdc) Ownable(msg.sender) {
         require(_usdc != address(0), "Cannot be zero");
@@ -79,7 +80,18 @@ contract UserPoolGames is Ownable2Step, ReentrancyGuard {
     ) external view returns (UserStruct memory) {
         return users[_address];
     }
+    function setTreasuryPool(address newPool) external onlyOwner {
+        treasuryPool = newPool;
+    }
 
+    function increaseDirectMember(address user) external {
+        require(msg.sender == address(treasuryPool));
+        users[user].directs++;
+    }
+    function setValid(address user) external {
+        require(msg.sender == address(treasuryPool));
+        users[user].valid = true;
+    }
     function distributeUnilevel(address user, uint amount) public nonReentrant {
         usdc.safeTransferFrom(msg.sender, address(this), (amount * 75) / 100);
 

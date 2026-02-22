@@ -5,6 +5,7 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/access/Ownable2Step.sol";
 import "hardhat/console.sol";
+import "./IUserPoolGames.sol";
 struct UserDonation {
     uint id;
     uint deposit;
@@ -40,12 +41,17 @@ contract TreasuryPool is ReentrancyGuard, Ownable2Step {
     uint64 private constant MIN_ROOF = 10e6;
 
     IERC20 private immutable usdc;
+    IUserPoolGames private userContract;
 
     mapping(address => UserDonation[]) private users;
     mapping(address => uint) public valueInPool;
 
     constructor(address _usdc) Ownable(msg.sender) {
         usdc = IERC20(_usdc);
+    }
+    function setUser(address userAddress) external onlyOwner {
+        require(address(userAddress) == address(0));
+        userContract = IUserPoolGames(userAddress);
     }
 
     function timeUntilNextWithdrawal(
@@ -142,6 +148,11 @@ contract TreasuryPool is ReentrancyGuard, Ownable2Step {
         _createDonation(msg.sender, amount, plan);
 
         emit UserContributed(msg.sender, amount);
+        UserStruct memory aux = userContract.getUser(msg.sender);
+        if (valueInPool[msg.sender] >= 100e6 && !aux.valid) {
+            userContract.increaseDirectMember(aux.levels[0]);
+            userContract.setValid(msg.sender);
+        }
     }
 
     function getActiveContributions(
