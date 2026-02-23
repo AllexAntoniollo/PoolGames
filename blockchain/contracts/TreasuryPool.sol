@@ -326,8 +326,8 @@ contract TreasuryPool is ReentrancyGuard, Ownable2Step {
 
             valueInPool[msg.sender] -= userDonation.deposit;
         }
-
-        usdc.safeTransfer(msg.sender, (totalValueInUSD));
+        console.log(totalValueInUSD);
+        usdc.safeTransfer(msg.sender, totalValueInUSD);
         emit UserClaimed(msg.sender, totalValueInUSD);
     }
 

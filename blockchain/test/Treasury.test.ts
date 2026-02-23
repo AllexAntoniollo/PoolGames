@@ -319,4 +319,43 @@ describe("Treasury", function () {
     console.log(await contract.totalProfitToClaim(owner.address));
     console.log(await contract.totalUnilevelProfit(owner.address));
   });
+  it("should test unilevel", async function () {
+    const {
+      owner,
+      otherAccount,
+      another,
+      usdt,
+      contract,
+      contractAddress,
+      contractUser,
+    } = await loadFixture(deployFixture);
+
+    const wallet = ethers.Wallet.createRandom().connect(ethers.provider);
+
+    await owner.sendTransaction({
+      to: wallet.address,
+      value: ethers.parseEther("1"),
+    });
+
+    await contractUser.connect(wallet).createUser(owner.address);
+    await usdt.mint(ethers.parseUnits("2000", 6));
+    await usdt.transfer(wallet.address, ethers.parseUnits("2000", 6));
+    await usdt
+      .connect(wallet)
+      .approve(contractAddress, ethers.parseUnits("2000", 6));
+
+    await usdt.approve(contractAddress, ethers.parseUnits("200", 6));
+    await contract.contribute(ethers.parseUnits("100", 6), 0);
+
+    await contract.connect(wallet).contribute(ethers.parseUnits("2000", 6), 0);
+    console.log("here");
+
+    console.log(await contract.totalProfitToClaim(owner.address));
+
+    await contract.contribute(ethers.parseUnits("10", 6), 0);
+
+    await time.increase(24 * 60 * 60);
+
+    await contract.claimContribution(0);
+  });
 });
