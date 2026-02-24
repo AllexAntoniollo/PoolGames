@@ -8,7 +8,6 @@ import "./ITreasuryPool.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/Ownable2Step.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "hardhat/console.sol";
 
 struct UserStruct {
@@ -20,7 +19,7 @@ struct UserStruct {
     uint directs;
 }
 
-contract UserPoolGames is Ownable2Step, ReentrancyGuard {
+contract UserPoolGames is Ownable2Step {
     using SafeERC20 for IERC20;
 
     IManager feeManager;
@@ -93,7 +92,8 @@ contract UserPoolGames is Ownable2Step, ReentrancyGuard {
         require(msg.sender == address(treasuryPool));
         users[user].valid = true;
     }
-    function distributeUnilevel(address user, uint amount) public nonReentrant {
+    function distributeUnilevel(address user, uint amount) external {
+        require(msg.sender == address(treasuryPool), "Only treasure");
         usdc.safeTransferFrom(msg.sender, address(this), (amount * 75) / 100);
 
         address[20] memory levels = (users[user].levels);
@@ -102,6 +102,10 @@ contract UserPoolGames is Ownable2Step, ReentrancyGuard {
         for (uint8 i = 1; i <= 20; i++) {
             uint share = (amount * getPercentageByLevel(i)) / 100;
             address _user = levels[i - 1];
+            if (_user == address(0)) {
+                excess += share;
+                continue;
+            }
 
             if (
                 users[_user].directs >= getDirectsRequiredByLevel(i) &&

@@ -75,9 +75,10 @@ contract TreasuryPool is ReentrancyGuard, Ownable2Step {
 
         UserDonation memory userDonation = users[user][index];
 
-        if (userDonation.daysPaid >= userDonation.maxPeriod) {
-            return 0;
-        }
+        require(
+            userDonation.daysPaid < userDonation.maxPeriod,
+            "Already finalized"
+        );
 
         uint256 timeSinceLastClaim = block.timestamp -
             userDonation.lastClaimTimestamp;
@@ -131,7 +132,7 @@ contract TreasuryPool is ReentrancyGuard, Ownable2Step {
 
         return PlanConfig(360, 2400); // 240%
     }
-    function _createDonation(
+    function _createContribution(
         address user,
         uint amount,
         DonatePlan plan
@@ -168,7 +169,7 @@ contract TreasuryPool is ReentrancyGuard, Ownable2Step {
         valueInPool[msg.sender] += amount;
         usdc.safeTransferFrom(msg.sender, address(this), amount);
 
-        uint profit = _createDonation(msg.sender, amount, plan);
+        uint profit = _createContribution(msg.sender, amount, plan);
         totalProfitToClaim[msg.sender] += profit;
         emit UserContributed(msg.sender, amount);
         if (valueInPool[msg.sender] >= 100e6 && !aux.valid) {
@@ -221,9 +222,7 @@ contract TreasuryPool is ReentrancyGuard, Ownable2Step {
     function calculateDaysElapsedToClaim(
         address user,
         uint index
-    ) public view returns (uint) {
-        require(index < users[user].length, "Invalid Index");
-
+    ) internal view returns (uint) {
         uint daysElapsed = (block.timestamp -
             users[user][index].lastClaimTimestamp) / 1 days;
         if (
@@ -241,7 +240,6 @@ contract TreasuryPool is ReentrancyGuard, Ownable2Step {
         uint index,
         uint daysElapsed
     ) internal view returns (uint) {
-        require(index < users[user].length, "Invalid Index");
         return
             ((users[user][index].balance - users[user][index].deposit) *
                 daysElapsed) / users[user][index].maxPeriod;
@@ -289,17 +287,14 @@ contract TreasuryPool is ReentrancyGuard, Ownable2Step {
             "Already claimed"
         );
 
-        uint daysSinceLastClaim = (block.timestamp -
-            userDonation.lastClaimTimestamp) / 1 days;
+        uint periodElapsed = calculateDaysElapsedToClaim(user, index);
 
         require(
-            daysSinceLastClaim >= 30 ||
-                userDonation.daysPaid + daysSinceLastClaim >=
-                userDonation.maxPeriod,
+            periodElapsed >= 30 ||
+                userDonation.daysPaid + periodElapsed >= userDonation.maxPeriod,
             "Claim allowed only after 30 days or at plan end"
         );
 
-        uint periodElapsed = calculateDaysElapsedToClaim(user, index);
         if (periodElapsed > 30) {
             periodElapsed = 30;
         }

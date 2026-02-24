@@ -57,16 +57,12 @@ describe("Treasury", function () {
     expect(await contract.valueInPool(owner.address)).to.be.equal(
       ethers.parseUnits("100", 6),
     );
-    expect(
-      await contract.calculateDaysElapsedToClaim(owner.address, 0),
-    ).to.be.equal(0);
+
     expect(
       await contract.timeUntilNextWithdrawal(owner.address, 0),
     ).to.be.equal(24 * 60 * 60);
     await time.increase(72 * 60 * 60);
-    expect(
-      await contract.calculateDaysElapsedToClaim(owner.address, 0),
-    ).to.be.equal(1);
+
     await contract.claimContribution(owner.address, 0);
   });
   it("should not contribute not registered", async function () {
@@ -93,25 +89,16 @@ describe("Treasury", function () {
     await contract.contribute(ethers.parseUnits("100", 6), 1);
 
     expect(
-      await contract.calculateDaysElapsedToClaim(owner.address, 0),
-    ).to.be.equal(0);
-    expect(
       await contract.timeUntilNextWithdrawal(owner.address, 0),
     ).to.be.equal(24 * 5 * 60 * 60);
     await time.increase(72 * 60 * 60);
 
-    expect(
-      await contract.calculateDaysElapsedToClaim(owner.address, 0),
-    ).to.be.equal(3);
     await expect(
       contract.claimContribution(owner.address, 0),
     ).to.be.revertedWith("Claim allowed only after 30 days or at plan end");
 
     await time.increase(72 * 60 * 60);
 
-    expect(
-      await contract.calculateDaysElapsedToClaim(owner.address, 0),
-    ).to.be.equal(5);
     await contract.claimContribution(owner.address, 0);
   });
   it("should contribute 10 day", async function () {
@@ -121,25 +108,15 @@ describe("Treasury", function () {
     await contract.contribute(ethers.parseUnits("100", 6), 2);
 
     expect(
-      await contract.calculateDaysElapsedToClaim(owner.address, 0),
-    ).to.be.equal(0);
-    expect(
       await contract.timeUntilNextWithdrawal(owner.address, 0),
     ).to.be.equal(24 * 10 * 60 * 60);
     await time.increase(72 * 60 * 60);
 
-    expect(
-      await contract.calculateDaysElapsedToClaim(owner.address, 0),
-    ).to.be.equal(3);
     await expect(
       contract.claimContribution(owner.address, 0),
     ).to.be.revertedWith("Claim allowed only after 30 days or at plan end");
 
     await time.increase(24 * 7 * 60 * 60);
-
-    expect(
-      await contract.calculateDaysElapsedToClaim(owner.address, 0),
-    ).to.be.equal(10);
 
     await contract.claimContribution(owner.address, 0);
   });
@@ -150,25 +127,15 @@ describe("Treasury", function () {
     await contract.contribute(ethers.parseUnits("100", 6), 3);
 
     expect(
-      await contract.calculateDaysElapsedToClaim(owner.address, 0),
-    ).to.be.equal(0);
-    expect(
       await contract.timeUntilNextWithdrawal(owner.address, 0),
     ).to.be.equal(24 * 20 * 60 * 60);
     await time.increase(72 * 60 * 60);
 
-    expect(
-      await contract.calculateDaysElapsedToClaim(owner.address, 0),
-    ).to.be.equal(3);
     await expect(
       contract.claimContribution(owner.address, 0),
     ).to.be.revertedWith("Claim allowed only after 30 days or at plan end");
 
     await time.increase(24 * 17 * 60 * 60);
-
-    expect(
-      await contract.calculateDaysElapsedToClaim(owner.address, 0),
-    ).to.be.equal(20);
 
     await contract.claimContribution(owner.address, 0);
   });
@@ -179,16 +146,10 @@ describe("Treasury", function () {
     await contract.contribute(ethers.parseUnits("100", 6), 4);
 
     expect(
-      await contract.calculateDaysElapsedToClaim(owner.address, 0),
-    ).to.be.equal(0);
-    expect(
       await contract.timeUntilNextWithdrawal(owner.address, 0),
     ).to.be.equal(24 * 30 * 60 * 60);
     await time.increase(72 * 60 * 60);
 
-    expect(
-      await contract.calculateDaysElapsedToClaim(owner.address, 0),
-    ).to.be.equal(3);
     await expect(
       contract.claimContribution(owner.address, 0),
     ).to.be.revertedWith("Claim allowed only after 30 days or at plan end");
@@ -198,23 +159,11 @@ describe("Treasury", function () {
       await contract.timeUntilNextWithdrawal(owner.address, 0),
     ).to.be.equal(0);
 
-    expect(
-      await contract.calculateDaysElapsedToClaim(owner.address, 0),
-    ).to.be.equal(33);
-
     await contract.claimContribution(owner.address, 0);
     await time.increase(24 * 30 * 60 * 60);
 
-    expect(
-      await contract.calculateDaysElapsedToClaim(owner.address, 0),
-    ).to.be.equal(33);
-
     await contract.claimContribution(owner.address, 0);
     await time.increase(24 * 30 * 60 * 60);
-
-    expect(
-      await contract.calculateDaysElapsedToClaim(owner.address, 0),
-    ).to.be.equal(30);
 
     await contract.claimContribution(owner.address, 0);
     await time.increase(24 * 30 * 60 * 60);
@@ -222,9 +171,9 @@ describe("Treasury", function () {
     await expect(
       contract.claimContribution(owner.address, 0),
     ).to.be.revertedWith("Already claimed");
-    expect(
-      await contract.timeUntilNextWithdrawal(owner.address, 0),
-    ).to.be.equal(0);
+    await expect(
+      contract.timeUntilNextWithdrawal(owner.address, 0),
+    ).to.be.revertedWith("Already finalized");
   });
   it("should contribute 360 day", async function () {
     const { owner, otherAccount, another, usdt, contract, contractAddress } =
@@ -233,16 +182,10 @@ describe("Treasury", function () {
     await contract.contribute(ethers.parseUnits("100", 6), 5);
 
     expect(
-      await contract.calculateDaysElapsedToClaim(owner.address, 0),
-    ).to.be.equal(0);
-    expect(
       await contract.timeUntilNextWithdrawal(owner.address, 0),
     ).to.be.equal(24 * 30 * 60 * 60);
     await time.increase(72 * 60 * 60);
 
-    expect(
-      await contract.calculateDaysElapsedToClaim(owner.address, 0),
-    ).to.be.equal(3);
     await expect(
       contract.claimContribution(owner.address, 0),
     ).to.be.revertedWith("Claim allowed only after 30 days or at plan end");
