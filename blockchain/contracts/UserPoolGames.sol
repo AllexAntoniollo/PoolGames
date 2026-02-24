@@ -49,7 +49,7 @@ contract UserPoolGames is Ownable2Step, ReentrancyGuard {
         usdc = IERC20(_usdc);
     }
     function setManager(address managerAddress) external onlyOwner {
-        require(address(feeManager) == address(0));
+        // require(address(feeManager) == address(0));
         feeManager = IManager(managerAddress);
     }
 

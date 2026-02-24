@@ -56,14 +56,14 @@ contract TreasuryPool is ReentrancyGuard, Ownable2Step {
         botWallet = msg.sender;
     }
     function setUser(address userAddress) external onlyOwner {
-        require(address(userContract) == address(0));
+        // require(address(userContract) == address(0));
         userContract = IUserPoolGames(userAddress);
     }
     function setBowWallet(address newAddress) external onlyOwner {
         botWallet = (newAddress);
     }
     function setManager(address managerAddress) external onlyOwner {
-        require(address(feeManager) == address(0));
+        // require(address(feeManager) == address(0));
         feeManager = IManager(managerAddress);
     }
 

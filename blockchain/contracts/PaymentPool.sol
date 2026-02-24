@@ -173,19 +173,6 @@ abstract contract PaymentPool is Ownable2Step, ReentrancyGuard {
 
         emit RecipientAdded(newRecipient, percentage);
     }
-    function forceClaimFor(address recipient) external onlyOwner nonReentrant {
-        for (uint i = 0; i < tokens.length; i++) {
-            address token = address(tokens[i]);
-            uint256 amount = recipientsClaim[recipient][token];
-
-            if (amount > 0) {
-                tokens[i].safeTransfer(recipient, amount);
-                totalClaimed[recipient][token] += amount;
-
-                recipientsClaim[recipient][token] = 0;
-            }
-        }
-    }
 
     function addImmutableWallet(address wallet) public onlyOwner {
         require(wallet != address(0), "Wallet address cannot be zero");

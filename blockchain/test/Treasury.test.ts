@@ -10,7 +10,7 @@ describe("Treasury", function () {
   async function deployFixture() {
     const [owner, otherAccount, another] = await ethers.getSigners();
 
-    const USDT = await ethers.getContractFactory("USDT");
+    const USDT = await ethers.getContractFactory("USDC");
     const usdt = await USDT.deploy();
     const usdtAddress = await usdt.getAddress();
 
@@ -23,7 +23,7 @@ describe("Treasury", function () {
     const feeManager = await FeeManager.deploy();
 
     const feeManagerAddress = await feeManager.getAddress();
-    await feeManager.addToken(usdtAddress, "USDT");
+    await feeManager.addToken(usdtAddress, "USDC");
     const UserContract = await ethers.getContractFactory("UserPoolGames");
 
     const contractUser = await UserContract.deploy(usdtAddress);
