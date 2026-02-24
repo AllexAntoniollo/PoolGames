@@ -36,6 +36,7 @@ describe("Treasury", function () {
 
     await usdt.mint(ethers.parseUnits("1000000", 6));
     await usdt.transfer(contractAddress, ethers.parseUnits("10000", 6));
+    await contract.setManager(feeManagerAddress);
     return {
       owner,
       otherAccount,
@@ -66,7 +67,7 @@ describe("Treasury", function () {
     expect(
       await contract.calculateDaysElapsedToClaim(owner.address, 0),
     ).to.be.equal(1);
-    await contract.claimContribution(0);
+    await contract.claimContribution(owner.address, 0);
   });
   it("should not contribute not registered", async function () {
     const { owner, otherAccount, another, usdt, contract, contractAddress } =
@@ -102,16 +103,16 @@ describe("Treasury", function () {
     expect(
       await contract.calculateDaysElapsedToClaim(owner.address, 0),
     ).to.be.equal(3);
-    await expect(contract.claimContribution(0)).to.be.revertedWith(
-      "Claim allowed only after 30 days or at plan end",
-    );
+    await expect(
+      contract.claimContribution(owner.address, 0),
+    ).to.be.revertedWith("Claim allowed only after 30 days or at plan end");
 
     await time.increase(72 * 60 * 60);
 
     expect(
       await contract.calculateDaysElapsedToClaim(owner.address, 0),
     ).to.be.equal(5);
-    await contract.claimContribution(0);
+    await contract.claimContribution(owner.address, 0);
   });
   it("should contribute 10 day", async function () {
     const { owner, otherAccount, another, usdt, contract, contractAddress } =
@@ -130,9 +131,9 @@ describe("Treasury", function () {
     expect(
       await contract.calculateDaysElapsedToClaim(owner.address, 0),
     ).to.be.equal(3);
-    await expect(contract.claimContribution(0)).to.be.revertedWith(
-      "Claim allowed only after 30 days or at plan end",
-    );
+    await expect(
+      contract.claimContribution(owner.address, 0),
+    ).to.be.revertedWith("Claim allowed only after 30 days or at plan end");
 
     await time.increase(24 * 7 * 60 * 60);
 
@@ -140,7 +141,7 @@ describe("Treasury", function () {
       await contract.calculateDaysElapsedToClaim(owner.address, 0),
     ).to.be.equal(10);
 
-    await contract.claimContribution(0);
+    await contract.claimContribution(owner.address, 0);
   });
   it("should contribute 20 day", async function () {
     const { owner, otherAccount, another, usdt, contract, contractAddress } =
@@ -159,9 +160,9 @@ describe("Treasury", function () {
     expect(
       await contract.calculateDaysElapsedToClaim(owner.address, 0),
     ).to.be.equal(3);
-    await expect(contract.claimContribution(0)).to.be.revertedWith(
-      "Claim allowed only after 30 days or at plan end",
-    );
+    await expect(
+      contract.claimContribution(owner.address, 0),
+    ).to.be.revertedWith("Claim allowed only after 30 days or at plan end");
 
     await time.increase(24 * 17 * 60 * 60);
 
@@ -169,7 +170,7 @@ describe("Treasury", function () {
       await contract.calculateDaysElapsedToClaim(owner.address, 0),
     ).to.be.equal(20);
 
-    await contract.claimContribution(0);
+    await contract.claimContribution(owner.address, 0);
   });
   it("should contribute 90 day", async function () {
     const { owner, otherAccount, another, usdt, contract, contractAddress } =
@@ -188,9 +189,9 @@ describe("Treasury", function () {
     expect(
       await contract.calculateDaysElapsedToClaim(owner.address, 0),
     ).to.be.equal(3);
-    await expect(contract.claimContribution(0)).to.be.revertedWith(
-      "Claim allowed only after 30 days or at plan end",
-    );
+    await expect(
+      contract.claimContribution(owner.address, 0),
+    ).to.be.revertedWith("Claim allowed only after 30 days or at plan end");
 
     await time.increase(24 * 30 * 60 * 60);
     expect(
@@ -201,26 +202,26 @@ describe("Treasury", function () {
       await contract.calculateDaysElapsedToClaim(owner.address, 0),
     ).to.be.equal(33);
 
-    await contract.claimContribution(0);
+    await contract.claimContribution(owner.address, 0);
     await time.increase(24 * 30 * 60 * 60);
 
     expect(
       await contract.calculateDaysElapsedToClaim(owner.address, 0),
     ).to.be.equal(33);
 
-    await contract.claimContribution(0);
+    await contract.claimContribution(owner.address, 0);
     await time.increase(24 * 30 * 60 * 60);
 
     expect(
       await contract.calculateDaysElapsedToClaim(owner.address, 0),
     ).to.be.equal(30);
 
-    await contract.claimContribution(0);
+    await contract.claimContribution(owner.address, 0);
     await time.increase(24 * 30 * 60 * 60);
 
-    await expect(contract.claimContribution(0)).to.be.revertedWith(
-      "Already claimed",
-    );
+    await expect(
+      contract.claimContribution(owner.address, 0),
+    ).to.be.revertedWith("Already claimed");
     expect(
       await contract.timeUntilNextWithdrawal(owner.address, 0),
     ).to.be.equal(0);
@@ -242,19 +243,19 @@ describe("Treasury", function () {
     expect(
       await contract.calculateDaysElapsedToClaim(owner.address, 0),
     ).to.be.equal(3);
-    await expect(contract.claimContribution(0)).to.be.revertedWith(
-      "Claim allowed only after 30 days or at plan end",
-    );
+    await expect(
+      contract.claimContribution(owner.address, 0),
+    ).to.be.revertedWith("Claim allowed only after 30 days or at plan end");
 
     for (let index = 0; index < 12; index++) {
       await time.increase(24 * 30 * 60 * 60);
 
-      await contract.claimContribution(0);
+      await contract.claimContribution(owner.address, 0);
     }
 
-    await expect(contract.claimContribution(0)).to.be.revertedWith(
-      "Already claimed",
-    );
+    await expect(
+      contract.claimContribution(owner.address, 0),
+    ).to.be.revertedWith("Already claimed");
   });
   it("should test unilevel", async function () {
     const {
@@ -304,20 +305,13 @@ describe("Treasury", function () {
     await usdt
       .connect(wallets[wallets.length - 1])
       .approve(contractAddress, ethers.parseUnits("2000", 6));
-    console.log(
-      await contractUser.getUser(wallets[wallets.length - 1].address),
-    );
 
     await contract
       .connect(wallets[wallets.length - 1])
       .contribute(ethers.parseUnits("1000", 6), 0);
 
-    console.log(await contract.totalProfitToClaim(owner.address));
-    console.log(await contract.totalUnilevelProfit(owner.address));
     await time.increase(24 * 60 * 60);
-    await contract.claimContribution(0);
-    console.log(await contract.totalProfitToClaim(owner.address));
-    console.log(await contract.totalUnilevelProfit(owner.address));
+    await contract.claimContribution(owner.address, 0);
   });
   it("should test unilevel", async function () {
     const {
@@ -348,14 +342,81 @@ describe("Treasury", function () {
     await contract.contribute(ethers.parseUnits("100", 6), 0);
 
     await contract.connect(wallet).contribute(ethers.parseUnits("2000", 6), 0);
-    console.log("here");
-
-    console.log(await contract.totalProfitToClaim(owner.address));
 
     await contract.contribute(ethers.parseUnits("10", 6), 0);
 
     await time.increase(24 * 60 * 60);
 
-    await contract.claimContribution(0);
+    await contract.claimContribution(owner.address, 0);
+  });
+  it("should test active and inactive contributions", async function () {
+    const { owner, otherAccount, another, usdt, contract, contractAddress } =
+      await loadFixture(deployFixture);
+    await usdt.approve(contractAddress, ethers.parseUnits("100000", 6));
+
+    for (let index = 0; index < 60; index++) {
+      await contract.contribute(ethers.parseUnits("10", 6), 0);
+    }
+    expect(
+      (await contract.getActiveContributions(owner.address, 0)).length,
+    ).to.be.equal(50);
+    expect(
+      (await contract.getActiveContributions(owner.address, 50)).length,
+    ).to.be.equal(10);
+
+    await time.increase(24 * 60 * 60);
+    for (let index = 0; index < 60; index++) {
+      await contract.claimContribution(owner.address, index);
+    }
+    expect(
+      (await contract.getActiveContributions(owner.address, 0)).length,
+    ).to.be.equal(0);
+  });
+  it("should test cancel", async function () {
+    const { owner, otherAccount, another, usdt, contract, contractAddress } =
+      await loadFixture(deployFixture);
+    await usdt.approve(contractAddress, ethers.parseUnits("100000", 6));
+
+    await contract.contribute(ethers.parseUnits("10", 6), 0);
+    await contract.contribute(ethers.parseUnits("10", 6), 0);
+
+    const balance = await usdt.balanceOf(owner.address);
+    await contract.cancelContribution(0);
+    expect(await usdt.balanceOf(owner.address)).to.be.equal(
+      balance + ethers.parseUnits("5", 6),
+    );
+    await expect(contract.cancelContribution(0)).to.be.revertedWith(
+      "Contribution already finished",
+    );
+    await time.increase(24 * 60 * 60);
+    await contract.claimContribution(owner.address, 1);
+    await expect(contract.cancelContribution(1)).to.be.revertedWith(
+      "Contribution already finished",
+    );
+  });
+  it("should test cancel 360 days", async function () {
+    const { owner, otherAccount, another, usdt, contract, contractAddress } =
+      await loadFixture(deployFixture);
+    await usdt.approve(contractAddress, ethers.parseUnits("100000", 6));
+
+    await contract.contribute(ethers.parseUnits("10", 6), 5);
+    await contract.contribute(ethers.parseUnits("10", 6), 5);
+
+    await time.increase(24 * 60 * 60 * 60);
+    await contract.claimContribution(owner.address, 0);
+    await contract.claimContribution(owner.address, 0);
+    const balance = await usdt.balanceOf(owner.address);
+    await contract.cancelContribution(0);
+
+    expect((await usdt.balanceOf(owner.address)) - balance).to.be.equal(
+      ethers.parseUnits("1", 6),
+    );
+    await time.increase(24 * 30 * 60 * 60);
+    await contract.claimContribution(owner.address, 1);
+    await contract.claimContribution(owner.address, 1);
+    await contract.claimContribution(owner.address, 1);
+    const balance2 = await usdt.balanceOf(owner.address);
+    await contract.cancelContribution(1);
+    expect(balance2).to.be.equal(await usdt.balanceOf(owner.address));
   });
 });

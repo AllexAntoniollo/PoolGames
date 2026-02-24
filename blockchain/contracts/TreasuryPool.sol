@@ -6,6 +6,7 @@ import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/access/Ownable2Step.sol";
 import "hardhat/console.sol";
 import "./IUserPoolGames.sol";
+import "./IManager.sol";
 struct UserDonation {
     uint id;
     uint deposit;
@@ -14,7 +15,6 @@ struct UserDonation {
     uint lastClaimTimestamp;
     uint daysPaid;
     uint valueClaimed;
-    uint claimPeriod;
     uint maxPeriod;
 }
 enum DonatePlan {
@@ -36,24 +36,35 @@ contract TreasuryPool is ReentrancyGuard, Ownable2Step {
 
     event UserContributed(address indexed user, uint amount);
     event UserClaimed(address indexed user, uint amount);
+    event UserCanceled(address indexed user, uint amount);
 
     uint64 private constant MAX_ROOF = 10000e6;
     uint64 private constant MIN_ROOF = 10e6;
 
     IERC20 private immutable usdc;
     IUserPoolGames private userContract;
+    address private botWallet;
 
     mapping(address => UserDonation[]) private users;
     mapping(address => uint) public valueInPool;
     mapping(address => uint) public totalProfitToClaim;
     mapping(address => uint) public totalUnilevelProfit;
+    IManager feeManager;
 
     constructor(address _usdc) Ownable(msg.sender) {
         usdc = IERC20(_usdc);
+        botWallet = msg.sender;
     }
     function setUser(address userAddress) external onlyOwner {
         require(address(userContract) == address(0));
         userContract = IUserPoolGames(userAddress);
+    }
+    function setBowWallet(address newAddress) external onlyOwner {
+        botWallet = (newAddress);
+    }
+    function setManager(address managerAddress) external onlyOwner {
+        require(address(feeManager) == address(0));
+        feeManager = IManager(managerAddress);
     }
 
     function timeUntilNextWithdrawal(
@@ -127,7 +138,7 @@ contract TreasuryPool is ReentrancyGuard, Ownable2Step {
     ) internal returns (uint profit) {
         PlanConfig memory config = getPlanConfig(plan);
 
-        uint id = users[msg.sender].length;
+        uint id = users[user].length;
 
         profit = (amount * config.profitPercent) / 1000;
         uint totalReturn = amount + profit;
@@ -141,7 +152,6 @@ contract TreasuryPool is ReentrancyGuard, Ownable2Step {
                 lastClaimTimestamp: block.timestamp,
                 daysPaid: 0,
                 valueClaimed: 0,
-                claimPeriod: config.maxPeriod * 1 days,
                 maxPeriod: config.maxPeriod
             })
         );
@@ -174,30 +184,29 @@ contract TreasuryPool is ReentrancyGuard, Ownable2Step {
         address user,
         uint startIndex
     ) external view returns (UserDonation[] memory) {
-        if (users[user].length == 0) {
+        uint totalContributions = users[user].length;
+
+        if (totalContributions == 0 || startIndex >= totalContributions) {
             UserDonation[] memory arr;
             return arr;
         }
-        require(startIndex > 0, "Start index > 0");
-        require(
-            startIndex <= users[user].length,
-            "Start index is out of bounds"
-        );
 
-        uint totalContributions = users[user].length;
         uint maxActiveContributions = 50;
         UserDonation[] memory tempContributions = new UserDonation[](
             maxActiveContributions
         );
 
         uint count = 0;
+
         for (
             uint i = startIndex;
-            i <= totalContributions && count < maxActiveContributions;
+            i < totalContributions && count < maxActiveContributions;
             i++
         ) {
-            if (users[user][i].daysPaid < users[user][i].maxPeriod) {
-                tempContributions[count] = users[user][i];
+            UserDonation memory donation = users[user][i];
+
+            if (donation.daysPaid < donation.maxPeriod) {
+                tempContributions[count] = donation;
                 count++;
             }
         }
@@ -209,46 +218,6 @@ contract TreasuryPool is ReentrancyGuard, Ownable2Step {
 
         return activeContributions;
     }
-    function getInactiveContributions(
-        address user,
-        uint startIndex
-    ) external view returns (UserDonation[] memory) {
-        if (users[user].length == 0) {
-            UserDonation[] memory arr;
-            return arr;
-        }
-        require(startIndex > 0, "Start index > 0");
-        require(
-            startIndex <= users[user].length,
-            "Start index is out of bounds"
-        );
-
-        uint totalContributions = users[user].length;
-        uint maxInactiveContributions = 50;
-        UserDonation[] memory tempContributions = new UserDonation[](
-            maxInactiveContributions
-        );
-
-        uint count = 0;
-        for (
-            uint i = startIndex;
-            i <= totalContributions && count < maxInactiveContributions;
-            i++
-        ) {
-            if (users[user][i].daysPaid == users[user][i].maxPeriod) {
-                tempContributions[count] = users[user][i];
-                count++;
-            }
-        }
-
-        UserDonation[] memory inactiveContributions = new UserDonation[](count);
-        for (uint j = 0; j < count; j++) {
-            inactiveContributions[j] = tempContributions[j];
-        }
-
-        return inactiveContributions;
-    }
-
     function calculateDaysElapsedToClaim(
         address user,
         uint index
@@ -277,11 +246,44 @@ contract TreasuryPool is ReentrancyGuard, Ownable2Step {
             ((users[user][index].balance - users[user][index].deposit) *
                 daysElapsed) / users[user][index].maxPeriod;
     }
-
-    function claimContribution(uint index) external nonReentrant {
+    function cancelContribution(uint index) external nonReentrant {
         require(index < users[msg.sender].length, "Invalid index");
 
-        UserDonation memory userDonation = users[msg.sender][index];
+        UserDonation memory donation = users[msg.sender][index];
+
+        require(
+            donation.daysPaid < donation.maxPeriod,
+            "Contribution already finished"
+        );
+        uint half = donation.deposit / 2;
+        uint fee = ((half + donation.valueClaimed) * 20) / 100;
+
+        uint refundAmount = donation.valueClaimed >= half
+            ? 0
+            : half - donation.valueClaimed;
+        valueInPool[msg.sender] -= donation.deposit;
+
+        uint profit = donation.balance - donation.deposit;
+
+        if (totalProfitToClaim[msg.sender] >= profit) {
+            totalProfitToClaim[msg.sender] -= profit;
+        } else {
+            totalProfitToClaim[msg.sender] = 0;
+        }
+
+        users[msg.sender][index].daysPaid = donation.maxPeriod;
+
+        usdc.safeTransfer(msg.sender, refundAmount);
+        usdc.approve(address(feeManager), fee);
+        feeManager.incrementBalance(fee, address(usdc));
+        emit UserCanceled(msg.sender, refundAmount);
+    }
+    function claimContribution(address user, uint index) external nonReentrant {
+        require(msg.sender == user || botWallet == msg.sender);
+
+        require(index < users[user].length, "Invalid index");
+
+        UserDonation memory userDonation = users[user][index];
         require(
             userDonation.daysPaid < userDonation.maxPeriod,
             "Already claimed"
@@ -297,38 +299,34 @@ contract TreasuryPool is ReentrancyGuard, Ownable2Step {
             "Claim allowed only after 30 days or at plan end"
         );
 
-        uint periodElapsed = calculateDaysElapsedToClaim(msg.sender, index);
+        uint periodElapsed = calculateDaysElapsedToClaim(user, index);
         if (periodElapsed > 30) {
             periodElapsed = 30;
         }
-        users[msg.sender][index].daysPaid += periodElapsed;
-        users[msg.sender][index].lastClaimTimestamp =
-            users[msg.sender][index].startedTimestamp +
-            (users[msg.sender][index].daysPaid * 1 days);
-        uint totalValueInUSD = calculateValue(msg.sender, index, periodElapsed);
-        users[msg.sender][index].valueClaimed += totalValueInUSD;
+        users[user][index].daysPaid += periodElapsed;
+        users[user][index].lastClaimTimestamp =
+            users[user][index].startedTimestamp +
+            (users[user][index].daysPaid * 1 days);
+        uint totalValueInUSD = calculateValue(user, index, periodElapsed);
+        users[user][index].valueClaimed += totalValueInUSD;
 
-        if (totalUnilevelProfit[msg.sender] >= totalValueInUSD) {
-            totalUnilevelProfit[msg.sender] -= totalValueInUSD;
-            totalProfitToClaim[msg.sender] -= totalValueInUSD;
+        if (totalUnilevelProfit[user] >= totalValueInUSD) {
+            totalUnilevelProfit[user] -= totalValueInUSD;
+            totalProfitToClaim[user] -= totalValueInUSD;
             totalValueInUSD = 0;
         } else {
-            totalProfitToClaim[msg.sender] -= totalValueInUSD;
-            totalValueInUSD -= totalUnilevelProfit[msg.sender];
-            totalUnilevelProfit[msg.sender] = 0;
+            totalProfitToClaim[user] -= totalValueInUSD;
+            totalValueInUSD -= totalUnilevelProfit[user];
+            totalUnilevelProfit[user] = 0;
         }
-        if (
-            users[msg.sender][index].daysPaid ==
-            users[msg.sender][index].maxPeriod
-        ) {
+        if (users[user][index].daysPaid == users[user][index].maxPeriod) {
             totalValueInUSD += userDonation.deposit;
-            users[msg.sender][index].valueClaimed += userDonation.deposit;
+            users[user][index].valueClaimed += userDonation.deposit;
 
-            valueInPool[msg.sender] -= userDonation.deposit;
+            valueInPool[user] -= userDonation.deposit;
         }
-        console.log(totalValueInUSD);
-        usdc.safeTransfer(msg.sender, totalValueInUSD);
-        emit UserClaimed(msg.sender, totalValueInUSD);
+        usdc.safeTransfer(user, totalValueInUSD);
+        emit UserClaimed(user, totalValueInUSD);
     }
 
     function getDonation(
