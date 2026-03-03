@@ -2,23 +2,19 @@ import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
 import dotenv from "dotenv";
 import "@nomicfoundation/hardhat-ethers";
-
+require("@openzeppelin/hardhat-upgrades");
 dotenv.config();
 
 const config: HardhatUserConfig = {
   solidity: {
-    compilers: [
-      {
-        version: "0.8.28",
-        settings: {
-          optimizer: {
-            enabled: true,
-            runs: 200,
-          },
-          viaIR: true,
-        },
+    version: "0.8.28",
+    settings: {
+      evmVersion: "cancun", // Add this line
+      optimizer: {
+        enabled: true,
+        runs: 200,
       },
-    ],
+    },
   },
   networks: {
     mumbai: {

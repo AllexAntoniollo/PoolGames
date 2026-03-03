@@ -51,6 +51,10 @@ contract UserPoolGames is Ownable2Step {
         // require(address(feeManager) == address(0));
         feeManager = IManager(managerAddress);
     }
+    modifier onlyTreasuryPool() {
+        require(msg.sender == address(treasuryPool), "Only TreasuryPool");
+        _;
+    }
 
     function createUser(address _sponsor) public {
         require(_sponsor != address(0), "Zero address");
@@ -84,16 +88,16 @@ contract UserPoolGames is Ownable2Step {
         treasuryPool = ITreasuryPool(newPool);
     }
 
-    function increaseDirectMember(address user) external {
-        require(msg.sender == address(treasuryPool));
+    function increaseDirectMember(address user) external onlyTreasuryPool {
         users[user].directs++;
     }
-    function setValid(address user) external {
-        require(msg.sender == address(treasuryPool));
+    function setValid(address user) external onlyTreasuryPool {
         users[user].valid = true;
     }
-    function distributeUnilevel(address user, uint amount) external {
-        require(msg.sender == address(treasuryPool), "Only treasure");
+    function distributeUnilevel(
+        address user,
+        uint amount
+    ) external onlyTreasuryPool {
         usdc.safeTransferFrom(msg.sender, address(this), (amount * 75) / 100);
 
         address[20] memory levels = (users[user].levels);
