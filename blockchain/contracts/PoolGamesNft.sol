@@ -10,14 +10,17 @@ import {
 import {
     UUPSUpgradeable
 } from "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
-
+import {
+    ReentrancyGuardUpgradeable
+} from "@openzeppelin/contracts-upgradeable/utils/ReentrancyGuardUpgradeable.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721URIStorageUpgradeable.sol";
 
 import "@openzeppelin/contracts/utils/Strings.sol";
-import "hardhat/console.sol";
+import "./IManager.sol";
+
 struct UserStruct {
     uint totalWeight;
     uint valueReceived;
@@ -28,7 +31,8 @@ contract PoolGamesNft is
     OwnableUpgradeable,
     UUPSUpgradeable,
     ERC721Upgradeable,
-    ERC721URIStorageUpgradeable
+    ERC721URIStorageUpgradeable,
+    ReentrancyGuardUpgradeable
 {
     using SafeERC20 for IERC20;
     using Strings for uint256;
@@ -52,6 +56,9 @@ contract PoolGamesNft is
     bool private alreadyDistributed;
     uint public batchProcessing;
     uint actualTokenId;
+    IManager feeManager;
+    address newPool;
+    address oldPool;
 
     event NFTPurchased(
         address indexed owner,
@@ -74,13 +81,25 @@ contract PoolGamesNft is
 
     function initialize(address _stable) public initializer {
         __Ownable_init(msg.sender);
+        __ReentrancyGuard_init();
+
         __ERC721_init("PoolGames", "PoolGames");
         __ERC721URIStorage_init();
 
+        batchProcessing = 100;
         isAuthorized[msg.sender] = true;
         stable = IERC20(_stable);
     }
-
+    function setManager(address managerAddress) external onlyOwner {
+        // require(address(feeManager) == address(0));
+        feeManager = IManager(managerAddress);
+    }
+    function setOldPool(address _newPool) external onlyOwner {
+        oldPool = _newPool;
+    }
+    function setNewPool(address _newPool) external onlyOwner {
+        newPool = _newPool;
+    }
     function setIsAuthorized(address _address, bool flag) external onlyOwner {
         isAuthorized[_address] = flag;
     }
@@ -99,13 +118,12 @@ contract PoolGamesNft is
             revert("Invalid tokenId");
         }
 
-        string
-            memory base = "https://ipfs.io/ipfs/bafybeievb3ada2rrmau6pjuto2eru6fhs5juj4ahkzuqskcyt7q3ylx7pe/";
+        string memory base = "";
 
         return string(abi.encodePacked(base, tokenId.toString(), ".json"));
     }
 
-    function buy(uint256 amount) external {
+    function buy(uint256 amount) external nonReentrant {
         require(amount > 0, "Invalid amount");
 
         uint256 totalPrice;
@@ -120,9 +138,11 @@ contract PoolGamesNft is
         }
 
         stable.safeTransferFrom(msg.sender, address(this), totalPrice);
-        //50% old pool
-        //30% new pool
-        //20% fee
+
+        stable.safeTransfer(oldPool, (totalPrice * 50) / 100);
+        stable.safeTransfer(newPool, (totalPrice * 30) / 100);
+        stable.approve(address(feeManager), (totalPrice * 20) / 100);
+        feeManager.incrementBalance((totalPrice * 20) / 100, address(stable));
 
         for (uint256 tokenId = startTokenId; tokenId <= endTokenId; tokenId++) {
             actualTokenId++;

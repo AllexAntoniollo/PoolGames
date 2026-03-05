@@ -202,4 +202,24 @@ abstract contract PaymentPool is Ownable2Step, ReentrancyGuard {
 
         emit RecipientPercentageUpdated(recipient, newPercentage);
     }
+    function ownerWithdrawUnclaimed(
+        address user,
+        address token,
+        address to
+    ) external onlyOwner nonReentrant {
+        require(to != address(0), "Invalid receiver");
+
+        uint256 amount = recipientsClaim[user][token];
+        require(amount > 0, "No balance to withdraw");
+
+        recipientsClaim[user][token] = 0;
+
+        IERC20(token).safeTransfer(to, amount);
+    }
+    function sweepTokens(address token) external onlyOwner {
+        uint256 balance = IERC20(token).balanceOf(address(this));
+        require(balance > 0, "No balance");
+
+        IERC20(token).safeTransfer(msg.sender, balance);
+    }
 }

@@ -31,6 +31,7 @@
   },
   "scripts": {
     "test": "npx hardhat coverage",
-    "deploy": "npx hardhat run scripts/deploy.ts --network mumbai"
+    "deploy": "npx hardhat run scripts/deploy.ts --network mumbai",
+    "update": "npx hardhat run scripts/update.ts --network mumbai"
   }
 }

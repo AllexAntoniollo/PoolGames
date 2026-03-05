@@ -1,0 +1,330 @@
+[
+  { "inputs": [], "stateMutability": "nonpayable", "type": "constructor" },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "target", "type": "address" }
+    ],
+    "name": "AddressEmptyCode",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "implementation", "type": "address" }
+    ],
+    "name": "ERC1967InvalidImplementation",
+    "type": "error"
+  },
+  { "inputs": [], "name": "ERC1967NonPayable", "type": "error" },
+  { "inputs": [], "name": "FailedCall", "type": "error" },
+  { "inputs": [], "name": "InvalidInitialization", "type": "error" },
+  { "inputs": [], "name": "NotInitializing", "type": "error" },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "owner", "type": "address" }
+    ],
+    "name": "OwnableInvalidOwner",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "account", "type": "address" }
+    ],
+    "name": "OwnableUnauthorizedAccount",
+    "type": "error"
+  },
+  { "inputs": [], "name": "ReentrancyGuardReentrantCall", "type": "error" },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "token", "type": "address" }
+    ],
+    "name": "SafeERC20FailedOperation",
+    "type": "error"
+  },
+  { "inputs": [], "name": "UUPSUnauthorizedCallContext", "type": "error" },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "slot", "type": "bytes32" }
+    ],
+    "name": "UUPSUnsupportedProxiableUUID",
+    "type": "error"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint64",
+        "name": "version",
+        "type": "uint64"
+      }
+    ],
+    "name": "Initialized",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "previousOwner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "OwnershipTransferred",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "implementation",
+        "type": "address"
+      }
+    ],
+    "name": "Upgraded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "sponsor",
+        "type": "address"
+      }
+    ],
+    "name": "UserAdded",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "UPGRADE_INTERFACE_VERSION",
+    "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "_sponsor", "type": "address" }
+    ],
+    "name": "createUser",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address[]", "name": "usersOld", "type": "address[]" },
+      {
+        "internalType": "address[]",
+        "name": "sponsorsOld",
+        "type": "address[]"
+      },
+      { "internalType": "uint256[]", "name": "oldValues", "type": "uint256[]" }
+    ],
+    "name": "createUserByOwner",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "user", "type": "address" },
+      { "internalType": "uint256", "name": "amount", "type": "uint256" }
+    ],
+    "name": "distributeUnilevel",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint8", "name": "level", "type": "uint8" }],
+    "name": "getDirectsRequiredByLevel",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint8", "name": "level", "type": "uint8" }],
+    "name": "getPercentageByLevel",
+    "outputs": [{ "internalType": "uint8", "name": "", "type": "uint8" }],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint8", "name": "level", "type": "uint8" }],
+    "name": "getPoolValueRequiredByLevel",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "_address", "type": "address" }
+    ],
+    "name": "getUser",
+    "outputs": [
+      {
+        "components": [
+          { "internalType": "bool", "name": "registered", "type": "bool" },
+          { "internalType": "bool", "name": "valid", "type": "bool" },
+          { "internalType": "uint8", "name": "totalLevels", "type": "uint8" },
+          {
+            "internalType": "address[20]",
+            "name": "levels",
+            "type": "address[20]"
+          },
+          {
+            "internalType": "address[]",
+            "name": "referrals",
+            "type": "address[]"
+          },
+          { "internalType": "uint256", "name": "directs", "type": "uint256" },
+          { "internalType": "uint256", "name": "oldValue", "type": "uint256" }
+        ],
+        "internalType": "struct UserStruct",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address[]", "name": "addrs", "type": "address[]" }
+    ],
+    "name": "getUsers",
+    "outputs": [
+      {
+        "components": [
+          { "internalType": "bool", "name": "registered", "type": "bool" },
+          { "internalType": "bool", "name": "valid", "type": "bool" },
+          { "internalType": "uint8", "name": "totalLevels", "type": "uint8" },
+          {
+            "internalType": "address[20]",
+            "name": "levels",
+            "type": "address[20]"
+          },
+          {
+            "internalType": "address[]",
+            "name": "referrals",
+            "type": "address[]"
+          },
+          { "internalType": "uint256", "name": "directs", "type": "uint256" },
+          { "internalType": "uint256", "name": "oldValue", "type": "uint256" }
+        ],
+        "internalType": "struct UserStruct[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "user", "type": "address" }
+    ],
+    "name": "increaseDirectMember",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "_usdc", "type": "address" }
+    ],
+    "name": "initialize",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "owner",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "proxiableUUID",
+    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "renounceOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "managerAddress", "type": "address" }
+    ],
+    "name": "setManager",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "newPool", "type": "address" }
+    ],
+    "name": "setTreasuryPool",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "user", "type": "address" }
+    ],
+    "name": "setValid",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "newOwner", "type": "address" }
+    ],
+    "name": "transferOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "newImplementation",
+        "type": "address"
+      },
+      { "internalType": "bytes", "name": "data", "type": "bytes" }
+    ],
+    "name": "upgradeToAndCall",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  }
+]

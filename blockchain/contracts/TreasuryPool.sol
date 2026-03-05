@@ -2,11 +2,20 @@
 pragma solidity ^0.8.28;
 
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
-import "@openzeppelin/contracts/access/Ownable2Step.sol";
-import "hardhat/console.sol";
 import "./IUserPoolGames.sol";
 import "./IManager.sol";
+import {
+    Initializable
+} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import {
+    OwnableUpgradeable
+} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import {
+    UUPSUpgradeable
+} from "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
+import {
+    ReentrancyGuardUpgradeable
+} from "@openzeppelin/contracts-upgradeable/utils/ReentrancyGuardUpgradeable.sol";
 struct UserDonation {
     uint id;
     uint deposit;
@@ -31,7 +40,12 @@ struct PlanConfig {
     uint profitPercent;
 }
 
-contract TreasuryPool is ReentrancyGuard, Ownable2Step {
+contract TreasuryPool is
+    Initializable,
+    OwnableUpgradeable,
+    UUPSUpgradeable,
+    ReentrancyGuardUpgradeable
+{
     using SafeERC20 for IERC20;
 
     event UserContributed(address indexed user, uint amount);
@@ -41,7 +55,7 @@ contract TreasuryPool is ReentrancyGuard, Ownable2Step {
     uint64 private constant MAX_ROOF = 10000e6;
     uint64 private constant MIN_ROOF = 10e6;
 
-    IERC20 private immutable usdc;
+    IERC20 private usdc;
     IUserPoolGames private userContract;
     address private botWallet;
 
@@ -51,10 +65,22 @@ contract TreasuryPool is ReentrancyGuard, Ownable2Step {
     mapping(address => uint) public totalUnilevelProfit;
     IManager feeManager;
 
-    constructor(address _usdc) Ownable(msg.sender) {
+    /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor() {
+        _disableInitializers();
+    }
+    function _authorizeUpgrade(
+        address newImplementation
+    ) internal override onlyOwner {}
+    function initialize(address _usdc) public initializer {
+        __ReentrancyGuard_init();
+
+        __Ownable_init(msg.sender);
+
         usdc = IERC20(_usdc);
         botWallet = msg.sender;
     }
+
     function setUser(address userAddress) external onlyOwner {
         // require(address(userContract) == address(0));
         userContract = IUserPoolGames(userAddress);

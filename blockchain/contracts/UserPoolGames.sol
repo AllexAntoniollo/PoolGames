@@ -1,14 +1,24 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.28;
 
+import {
+    Initializable
+} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import {
+    OwnableUpgradeable
+} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import {
+    UUPSUpgradeable
+} from "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
+import {
+    ReentrancyGuardUpgradeable
+} from "@openzeppelin/contracts-upgradeable/utils/ReentrancyGuardUpgradeable.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "./IManager.sol";
 import "./ITreasuryPool.sol";
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/access/Ownable2Step.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import "hardhat/console.sol";
 
 struct UserStruct {
     bool registered;
@@ -17,9 +27,15 @@ struct UserStruct {
     address[20] levels;
     address[] referrals;
     uint directs;
+    uint oldValue;
 }
 
-contract UserPoolGames is Ownable2Step {
+contract UserPoolGames is
+    Initializable,
+    OwnableUpgradeable,
+    UUPSUpgradeable,
+    ReentrancyGuardUpgradeable
+{
     using SafeERC20 for IERC20;
 
     IManager feeManager;
@@ -28,10 +44,19 @@ contract UserPoolGames is Ownable2Step {
 
     mapping(address => UserStruct) private users;
 
-    IERC20 private immutable usdc;
+    IERC20 private usdc;
     ITreasuryPool private treasuryPool;
+    /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor() {
+        _disableInitializers();
+    }
+    function _authorizeUpgrade(
+        address newImplementation
+    ) internal override onlyOwner {}
+    function initialize(address _usdc) public initializer {
+        __Ownable_init(msg.sender);
+        __ReentrancyGuard_init();
 
-    constructor(address _usdc) Ownable(msg.sender) {
         require(_usdc != address(0), "Cannot be zero");
 
         address[] memory referrals;
@@ -42,11 +67,13 @@ contract UserPoolGames is Ownable2Step {
             levels: levels20,
             referrals: referrals,
             directs: 0,
-            valid: true
+            valid: true,
+            oldValue: 0
         });
 
         usdc = IERC20(_usdc);
     }
+
     function setManager(address managerAddress) external onlyOwner {
         // require(address(feeManager) == address(0));
         feeManager = IManager(managerAddress);
@@ -55,8 +82,50 @@ contract UserPoolGames is Ownable2Step {
         require(msg.sender == address(treasuryPool), "Only TreasuryPool");
         _;
     }
+    function getUsers(
+        address[] calldata addrs
+    ) external view returns (UserStruct[] memory) {
+        uint length = addrs.length;
+        UserStruct[] memory result = new UserStruct[](length);
 
-    function createUser(address _sponsor) public {
+        for (uint i = 0; i < length; i++) {
+            result[i] = users[addrs[i]];
+        }
+
+        return result;
+    }
+    function createUserByOwner(
+        address[] memory usersOld,
+        address[] memory sponsorsOld,
+        uint[] memory oldValues
+    ) external onlyOwner {
+        for (uint i = 0; i < usersOld.length; i++) {
+            address user = usersOld[i];
+            address sponsor = sponsorsOld[i];
+            uint oldValue = oldValues[i];
+
+            require(!users[user].registered, "Already Registered");
+            require(users[sponsor].registered, "Invalid Sponsor");
+            UserStruct storage newUser = users[user];
+            address[20] memory levels;
+            newUser.registered = true;
+            newUser.levels = levels;
+            newUser.levels[0] = sponsor;
+            users[sponsor].referrals.push(user);
+            UserStruct storage sponsorUser = users[sponsor];
+            for (uint8 j = 1; j <= sponsorUser.totalLevels && j < 20; j++) {
+                newUser.levels[j] = sponsorUser.levels[j - 1];
+            }
+            newUser.totalLevels = uint8(
+                sponsorUser.totalLevels + 1 <= 20
+                    ? sponsorUser.totalLevels + 1
+                    : 20
+            );
+            newUser.oldValue = oldValue;
+        }
+    }
+
+    function createUser(address _sponsor) external nonReentrant {
         require(_sponsor != address(0), "Zero address");
 
         require(!users[msg.sender].registered, "Already Registered");

@@ -7,6 +7,7 @@ struct UserStruct {
     address[20] levels;
     address[] referrals;
     uint directs;
+    uint oldValue;
 }
 
 interface IUserPoolGames {

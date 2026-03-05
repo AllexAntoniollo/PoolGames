@@ -1,36 +1,26 @@
-import { ethers } from "hardhat";
+import { ethers, upgrades } from "hardhat";
 import { exec } from "child_process";
+import { PoolGamesNft, TreasuryPool, UserPoolGames } from "../typechain-types";
 
 async function main() {
-  const USDC = await ethers.getContractFactory("USDC");
-  const usdc = await USDC.deploy();
-  await usdc.waitForDeployment();
-  const usdcAddress = await usdc.getAddress();
-  console.log(`usdcAddress deployed to ${usdcAddress}`);
-  await runCommand(usdcAddress, []);
-  const FeeManager = await ethers.getContractFactory("FeeManager");
-  const feeManager = await FeeManager.deploy();
-  await feeManager.waitForDeployment();
-  const feeManagerAddress = await feeManager.getAddress();
-  console.log(`feeManagerAddress deployed to ${feeManagerAddress}`);
-  await runCommand(feeManagerAddress, []);
-  await (await feeManager.addToken(usdcAddress, "USDC")).wait();
-  const UserPoolGames = await ethers.getContractFactory("UserPoolGames");
-  const userContract = await UserPoolGames.deploy(usdcAddress);
-  await userContract.waitForDeployment();
-  const userContractAddress = await userContract.getAddress();
-  console.log(`userContractAddress deployed to ${userContractAddress}`);
-  await runCommand(userContractAddress, [usdcAddress]);
-  await (await userContract.setManager(feeManagerAddress)).wait();
-  const TreasuryPool = await ethers.getContractFactory("TreasuryPool");
-  const TreasuryPoolContract = await TreasuryPool.deploy(usdcAddress);
-  await TreasuryPoolContract.waitForDeployment();
-  const TreasuryPoolAddress = await TreasuryPoolContract.getAddress();
-  console.log(`TreasuryPoolAddress deployed to ${TreasuryPoolAddress}`);
-  await runCommand(TreasuryPoolAddress, [usdcAddress]);
-  await (await TreasuryPoolContract.setManager(feeManagerAddress)).wait();
-  await (await TreasuryPoolContract.setUser(userContractAddress)).wait();
-  await (await userContract.setTreasuryPool(TreasuryPoolAddress)).wait();
+  const PoolGamesNft = await ethers.getContractFactory("UserPoolGames");
+  const poolGamesNft = await upgrades.deployProxy(PoolGamesNft, [
+    "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+  ]);
+  await poolGamesNft.waitForDeployment();
+  const poolGames = PoolGamesNft.attach(
+    await poolGamesNft.getAddress(),
+  ) as UserPoolGames;
+  const poolGamesAddress = await poolGames.getAddress();
+  console.log(poolGamesAddress);
+  // await (
+  //   await poolGames.setManager("0xF325E181a663545314935f91e724A94C8737B545")
+  // ).wait();
+  // await (
+  //   await poolGames.setTreasuryPool(
+  //     "0x7eB556973D11866e12047441f9ef6A75b0148DB5",
+  //   )
+  // ).wait();
 }
 
 main().catch((error) => {

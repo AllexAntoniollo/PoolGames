@@ -37,7 +37,7 @@ describe("Treasury", function () {
     const poolGamesAddress = await poolGames.getAddress();
     await usdt.mint(ethers.parseUnits("1000000", 6));
     await usdt.approve(poolGamesAddress, ethers.parseUnits("1000000", 6));
-    await poolGames.setBatchProcessing(110);
+    await poolGames.setBatchProcessing(60);
     return {
       owner,
       otherAccount,
