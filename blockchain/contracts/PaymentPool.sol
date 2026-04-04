@@ -167,7 +167,7 @@ abstract contract PaymentPool is Ownable2Step, ReentrancyGuard {
         );
         recipients.push(newRecipient);
         totalRecipients++;
-        isRegistered[msg.sender] = true;
+        isRegistered[newRecipient] = true;
         recipientsPercentage[newRecipient] = percentage;
         totalPercentage += percentage;
 
@@ -188,7 +188,7 @@ abstract contract PaymentPool is Ownable2Step, ReentrancyGuard {
         address recipient,
         uint24 newPercentage
     ) external onlyOwner {
-        require(isRegistered[msg.sender], "Recipient does not exist");
+        require(isRegistered[recipient], "Recipient does not exist");
         require(
             !immutableWallets[recipient],
             "This recipient is immutable and cannot have their percentage updated"
