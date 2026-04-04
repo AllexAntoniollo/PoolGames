@@ -90,9 +90,12 @@ abstract contract PaymentPool is Ownable2Step, ReentrancyGuard {
 
     function claim() external nonReentrant {
         require(recipientsPercentage[msg.sender] > 0, "Invalid recipient");
+
         for (uint i = 0; i < tokens.length; i++) {
             address token = address(tokens[i]);
             uint amount = balanceFree[token];
+            uint totalDistributed;
+
             if (amount == 0) {
                 if (recipientsClaim[msg.sender][token] > 0) {
                     tokens[i].safeTransfer(
@@ -105,19 +108,27 @@ abstract contract PaymentPool is Ownable2Step, ReentrancyGuard {
 
                     recipientsClaim[msg.sender][token] = 0;
                 }
+
                 continue;
             }
+
             for (uint j = 0; j < recipients.length; j++) {
                 address user = address(recipients[j]);
                 uint value = (amount * recipientsPercentage[user]) / PRECISION;
                 recipientsClaim[user][token] += value;
-
-                balanceFree[token] -= value;
+                totalDistributed += value;
             }
-            tokens[i].safeTransfer(
-                msg.sender,
-                recipientsClaim[msg.sender][token]
-            );
+
+            uint claimable = recipientsClaim[msg.sender][token];
+            if (claimable > 0) {
+                tokens[i].safeTransfer(msg.sender, claimable);
+            }
+            uint remainder = amount - totalDistributed;
+
+            if (remainder > 0) {
+                tokens[i].safeTransfer(owner(), remainder);
+            }
+            balanceFree[token] = 0;
             totalClaimed[msg.sender][token] += recipientsClaim[msg.sender][
                 token
             ];
@@ -215,11 +226,5 @@ abstract contract PaymentPool is Ownable2Step, ReentrancyGuard {
         recipientsClaim[user][token] = 0;
 
         IERC20(token).safeTransfer(to, amount);
-    }
-    function sweepTokens(address token) external onlyOwner {
-        uint256 balance = IERC20(token).balanceOf(address(this));
-        require(balance > 0, "No balance");
-
-        IERC20(token).safeTransfer(msg.sender, balance);
     }
 }

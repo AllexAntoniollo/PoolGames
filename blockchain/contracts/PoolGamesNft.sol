@@ -78,9 +78,6 @@ contract PoolGamesNft is
         require(newValue > 0);
         batchProcessing = newValue;
     }
-    function setValuePaidInDistribution(uint newValue) external onlyOwner {
-        valuePaidInDistribution = newValue;
-    }
 
     function initialize(address _stable) public initializer {
         __Ownable_init(msg.sender);
@@ -108,6 +105,7 @@ contract PoolGamesNft is
     }
 
     function addValueToDistribute(uint amount) external {
+        require(isAuthorized[msg.sender], "Not authorized");
         require(!isDistributePeriod, "distribute period");
         stable.safeTransferFrom(msg.sender, address(this), amount);
 
