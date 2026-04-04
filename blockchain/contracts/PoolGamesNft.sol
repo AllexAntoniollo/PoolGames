@@ -52,14 +52,14 @@ contract PoolGamesNft is
     uint public valueToDistribute;
 
     uint private indexPaid;
-    uint private valuePaidInDistribution;
+    uint public valuePaidInDistribution;
     bool private alreadyDistributed;
     uint public batchProcessing;
     uint actualTokenId;
     IManager feeManager;
     address newPool;
     address oldPool;
-
+    bool isMint;
     event NFTPurchased(
         address indexed owner,
         uint256 indexed tokenId,
@@ -77,6 +77,9 @@ contract PoolGamesNft is
         require(!isDistributePeriod);
         require(newValue > 0);
         batchProcessing = newValue;
+    }
+    function setValuePaidInDistribution(uint newValue) external onlyOwner {
+        valuePaidInDistribution = newValue;
     }
 
     function initialize(address _stable) public initializer {
@@ -122,8 +125,32 @@ contract PoolGamesNft is
 
         return string(abi.encodePacked(base, tokenId.toString(), ".json"));
     }
+    function _update(
+        address to,
+        uint256 tokenId,
+        address auth
+    ) internal override(ERC721Upgradeable) returns (address previousOwner) {
+        previousOwner = super._update(to, tokenId, auth);
+
+        if (to != address(0)) {
+            if (isMint) {
+                if (!isDistributePeriod) {
+                    tokenIdToReceivePayment.push(tokenId);
+                    users[to].totalWeight++;
+                    totalWeightNftToReceivePayment++;
+                } else {
+                    tokenIdToReceivePaymentPendings.push(tokenId);
+                    totalWeightNftToReceivePaymentPending++;
+                }
+            } else {
+                users[to].totalWeight++;
+                users[previousOwner].totalWeight--;
+            }
+        }
+    }
 
     function buy(uint256 amount) external nonReentrant {
+        isMint = true;
         require(amount > 0, "Invalid amount");
 
         uint256 totalPrice;
@@ -150,17 +177,9 @@ contract PoolGamesNft is
             string memory metadata = getNftMetadata(tokenId);
             _setTokenURI(tokenId, metadata);
 
-            if (!isDistributePeriod) {
-                tokenIdToReceivePayment.push(tokenId);
-                users[msg.sender].totalWeight++;
-                totalWeightNftToReceivePayment++;
-            } else {
-                tokenIdToReceivePaymentPendings.push(tokenId);
-                totalWeightNftToReceivePaymentPending++;
-            }
-
             emit NFTPurchased(msg.sender, tokenId, block.timestamp);
         }
+        isMint = false;
     }
 
     function getPriceByTokenId(uint256 tokenId) public pure returns (uint256) {
@@ -203,8 +222,25 @@ contract PoolGamesNft is
             uint share = valueToDistribute / totalWeightNftToReceivePayment;
             ++currentIndex;
 
-            valuePaidInDistribution += share;
+            bool isLast = (currentIndex == length - 1);
+
+            uint amountToSend = share;
+
+            if (isLast) {
+                uint remainder = valueToDistribute %
+                    totalWeightNftToReceivePayment;
+
+                amountToSend += remainder;
+            }
+
+            valuePaidInDistribution += amountToSend;
+
             address _user = ownerOf(tokenId);
+            if (indexPaid == tokenIdToReceivePayment.length - 1) {
+                uint remainder = valueToDistribute %
+                    totalWeightNftToReceivePayment;
+                share += remainder;
+            }
 
             stable.safeTransfer(_user, share);
             users[_user].valueReceived += share;

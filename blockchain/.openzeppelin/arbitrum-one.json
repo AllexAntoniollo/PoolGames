@@ -458,7 +458,7 @@
             "label": "userContract",
             "offset": 0,
             "slot": "1",
-            "type": "t_contract(IUserPoolGames)2549",
+            "type": "t_contract(IUserPoolGames)2532",
             "contract": "TreasuryPool",
             "src": "contracts\\TreasuryPool.sol:59"
           },
@@ -474,7 +474,7 @@
             "label": "users",
             "offset": 0,
             "slot": "3",
-            "type": "t_mapping(t_address,t_array(t_struct(UserDonation)2579_storage)dyn_storage)",
+            "type": "t_mapping(t_address,t_array(t_struct(UserDonation)2562_storage)dyn_storage)",
             "contract": "TreasuryPool",
             "src": "contracts\\TreasuryPool.sol:62"
           },
@@ -570,7 +570,7 @@
             "label": "uint64",
             "numberOfBytes": "8"
           },
-          "t_array(t_struct(UserDonation)2579_storage)dyn_storage": {
+          "t_array(t_struct(UserDonation)2562_storage)dyn_storage": {
             "label": "struct UserDonation[]",
             "numberOfBytes": "32"
           },
@@ -582,11 +582,11 @@
             "label": "contract IManager",
             "numberOfBytes": "20"
           },
-          "t_contract(IUserPoolGames)2549": {
+          "t_contract(IUserPoolGames)2532": {
             "label": "contract IUserPoolGames",
             "numberOfBytes": "20"
           },
-          "t_mapping(t_address,t_array(t_struct(UserDonation)2579_storage)dyn_storage)": {
+          "t_mapping(t_address,t_array(t_struct(UserDonation)2562_storage)dyn_storage)": {
             "label": "mapping(address => struct UserDonation[])",
             "numberOfBytes": "32"
           },
@@ -594,7 +594,7 @@
             "label": "mapping(address => uint256)",
             "numberOfBytes": "32"
           },
-          "t_struct(UserDonation)2579_storage": {
+          "t_struct(UserDonation)2562_storage": {
             "label": "struct UserDonation",
             "members": [
               {
@@ -1128,6 +1128,1957 @@
     "700d1d659a026972e018366324db59cffae0364527d4bac3b237478e9cb2f4e2": {
       "address": "0x4229e4d21326586c90914c167c9615c94932533A",
       "txHash": "0xf4b8ace67e2530b85a227a772581dfd5850b5464006aa55cf81200779c6b17cf",
+      "layout": {
+        "solcVersion": "0.8.28",
+        "storage": [
+          {
+            "label": "usdc",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_contract(IERC20)1314",
+            "contract": "TreasuryPool",
+            "src": "contracts\\TreasuryPool.sol:58"
+          },
+          {
+            "label": "userContract",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_contract(IUserPoolGames)2532",
+            "contract": "TreasuryPool",
+            "src": "contracts\\TreasuryPool.sol:59"
+          },
+          {
+            "label": "botWallet",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_address",
+            "contract": "TreasuryPool",
+            "src": "contracts\\TreasuryPool.sol:60"
+          },
+          {
+            "label": "users",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_mapping(t_address,t_array(t_struct(UserDonation)2562_storage)dyn_storage)",
+            "contract": "TreasuryPool",
+            "src": "contracts\\TreasuryPool.sol:62"
+          },
+          {
+            "label": "valueInPool",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "TreasuryPool",
+            "src": "contracts\\TreasuryPool.sol:63"
+          },
+          {
+            "label": "totalProfitToClaim",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "TreasuryPool",
+            "src": "contracts\\TreasuryPool.sol:64"
+          },
+          {
+            "label": "totalUnilevelProfit",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "TreasuryPool",
+            "src": "contracts\\TreasuryPool.sol:65"
+          },
+          {
+            "label": "feeManager",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_contract(IManager)2486",
+            "contract": "TreasuryPool",
+            "src": "contracts\\TreasuryPool.sol:66"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_struct(InitializableStorage)359_storage": {
+            "label": "struct Initializable.InitializableStorage",
+            "members": [
+              {
+                "label": "_initialized",
+                "type": "t_uint64",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_initializing",
+                "type": "t_bool",
+                "offset": 8,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(OwnableStorage)13_storage": {
+            "label": "struct OwnableUpgradeable.OwnableStorage",
+            "members": [
+              {
+                "label": "_owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(ReentrancyGuardStorage)117_storage": {
+            "label": "struct ReentrancyGuardUpgradeable.ReentrancyGuardStorage",
+            "members": [
+              {
+                "label": "_status",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint64": {
+            "label": "uint64",
+            "numberOfBytes": "8"
+          },
+          "t_array(t_struct(UserDonation)2562_storage)dyn_storage": {
+            "label": "struct UserDonation[]",
+            "numberOfBytes": "32"
+          },
+          "t_contract(IERC20)1314": {
+            "label": "contract IERC20",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IManager)2486": {
+            "label": "contract IManager",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IUserPoolGames)2532": {
+            "label": "contract IUserPoolGames",
+            "numberOfBytes": "20"
+          },
+          "t_mapping(t_address,t_array(t_struct(UserDonation)2562_storage)dyn_storage)": {
+            "label": "mapping(address => struct UserDonation[])",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_struct(UserDonation)2562_storage": {
+            "label": "struct UserDonation",
+            "members": [
+              {
+                "label": "id",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "deposit",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "balance",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "startedTimestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "lastClaimTimestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "daysPaid",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "5"
+              },
+              {
+                "label": "valueClaimed",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "6"
+              },
+              {
+                "label": "maxPeriod",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "7"
+              }
+            ],
+            "numberOfBytes": "256"
+          }
+        },
+        "namespaces": {
+          "erc7201:openzeppelin.storage.ReentrancyGuard": [
+            {
+              "contract": "ReentrancyGuardUpgradeable",
+              "label": "_status",
+              "type": "t_uint256",
+              "src": "@openzeppelin\\contracts-upgradeable\\utils\\ReentrancyGuardUpgradeable.sol:43",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Ownable": [
+            {
+              "contract": "OwnableUpgradeable",
+              "label": "_owner",
+              "type": "t_address",
+              "src": "@openzeppelin\\contracts-upgradeable\\access\\OwnableUpgradeable.sol:24",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Initializable": [
+            {
+              "contract": "Initializable",
+              "label": "_initialized",
+              "type": "t_uint64",
+              "src": "@openzeppelin\\contracts\\proxy\\utils\\Initializable.sol:69",
+              "offset": 0,
+              "slot": "0"
+            },
+            {
+              "contract": "Initializable",
+              "label": "_initializing",
+              "type": "t_bool",
+              "src": "@openzeppelin\\contracts\\proxy\\utils\\Initializable.sol:73",
+              "offset": 8,
+              "slot": "0"
+            }
+          ]
+        }
+      }
+    },
+    "bcdb1c3e583ec4bbbccfd8dd194b7c65ab4a0aa6cf02e34c6826f3a2ff4b61fc": {
+      "address": "0x5Cc422Acaf289cb1f47A9ce9D38CD3a8398a13ca",
+      "txHash": "0x32e89976acb76ed65694531c7f048e19c8757d4e33b36f838b793776fed8e6a9",
+      "layout": {
+        "solcVersion": "0.8.28",
+        "storage": [
+          {
+            "label": "users",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_mapping(t_address,t_struct(UserStruct)10156_storage)",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:40"
+          },
+          {
+            "label": "stable",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_contract(IERC20)2794",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:42"
+          },
+          {
+            "label": "isAuthorized",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:44"
+          },
+          {
+            "label": "tokenIdToReceivePayment",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_array(t_uint256)dyn_storage",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:45"
+          },
+          {
+            "label": "tokenIdToReceivePaymentPendings",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_array(t_uint256)dyn_storage",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:46"
+          },
+          {
+            "label": "totalWeightNftToReceivePayment",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_uint256",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:48"
+          },
+          {
+            "label": "totalWeightNftToReceivePaymentPending",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_uint256",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:49"
+          },
+          {
+            "label": "isDistributePeriod",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_bool",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:51"
+          },
+          {
+            "label": "valueToDistribute",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_uint256",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:52"
+          },
+          {
+            "label": "indexPaid",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_uint256",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:54"
+          },
+          {
+            "label": "valuePaidInDistribution",
+            "offset": 0,
+            "slot": "10",
+            "type": "t_uint256",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:55"
+          },
+          {
+            "label": "alreadyDistributed",
+            "offset": 0,
+            "slot": "11",
+            "type": "t_bool",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:56"
+          },
+          {
+            "label": "batchProcessing",
+            "offset": 0,
+            "slot": "12",
+            "type": "t_uint256",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:57"
+          },
+          {
+            "label": "actualTokenId",
+            "offset": 0,
+            "slot": "13",
+            "type": "t_uint256",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:58"
+          },
+          {
+            "label": "feeManager",
+            "offset": 0,
+            "slot": "14",
+            "type": "t_contract(IManager)10135",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:59"
+          },
+          {
+            "label": "newPool",
+            "offset": 0,
+            "slot": "15",
+            "type": "t_address",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:60"
+          },
+          {
+            "label": "oldPool",
+            "offset": 0,
+            "slot": "16",
+            "type": "t_address",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:61"
+          },
+          {
+            "label": "isMint",
+            "offset": 20,
+            "slot": "16",
+            "type": "t_bool",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:62"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_bool))": {
+            "label": "mapping(address => mapping(address => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_address)": {
+            "label": "mapping(uint256 => address)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_string_storage)": {
+            "label": "mapping(uint256 => string)",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(ERC721Storage)131_storage": {
+            "label": "struct ERC721Upgradeable.ERC721Storage",
+            "members": [
+              {
+                "label": "_name",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_symbol",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "_owners",
+                "type": "t_mapping(t_uint256,t_address)",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "_balances",
+                "type": "t_mapping(t_address,t_uint256)",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "_tokenApprovals",
+                "type": "t_mapping(t_uint256,t_address)",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "_operatorApprovals",
+                "type": "t_mapping(t_address,t_mapping(t_address,t_bool))",
+                "offset": 0,
+                "slot": "5"
+              }
+            ],
+            "numberOfBytes": "192"
+          },
+          "t_struct(ERC721URIStorageStorage)438_storage": {
+            "label": "struct ERC721URIStorageUpgradeable.ERC721URIStorageStorage",
+            "members": [
+              {
+                "label": "_tokenURIs",
+                "type": "t_mapping(t_uint256,t_string_storage)",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(InitializableStorage)865_storage": {
+            "label": "struct Initializable.InitializableStorage",
+            "members": [
+              {
+                "label": "_initialized",
+                "type": "t_uint64",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_initializing",
+                "type": "t_bool",
+                "offset": 8,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(OwnableStorage)13_storage": {
+            "label": "struct OwnableUpgradeable.OwnableStorage",
+            "members": [
+              {
+                "label": "_owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(ReentrancyGuardStorage)533_storage": {
+            "label": "struct ReentrancyGuardUpgradeable.ReentrancyGuardStorage",
+            "members": [
+              {
+                "label": "_status",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint64": {
+            "label": "uint64",
+            "numberOfBytes": "8"
+          },
+          "t_array(t_uint256)dyn_storage": {
+            "label": "uint256[]",
+            "numberOfBytes": "32"
+          },
+          "t_contract(IERC20)2794": {
+            "label": "contract IERC20",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IManager)10135": {
+            "label": "contract IManager",
+            "numberOfBytes": "20"
+          },
+          "t_mapping(t_address,t_struct(UserStruct)10156_storage)": {
+            "label": "mapping(address => struct UserStruct)",
+            "numberOfBytes": "32"
+          },
+          "t_struct(UserStruct)10156_storage": {
+            "label": "struct UserStruct",
+            "members": [
+              {
+                "label": "totalWeight",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "valueReceived",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              }
+            ],
+            "numberOfBytes": "64"
+          }
+        },
+        "namespaces": {
+          "erc7201:openzeppelin.storage.ReentrancyGuard": [
+            {
+              "contract": "ReentrancyGuardUpgradeable",
+              "label": "_status",
+              "type": "t_uint256",
+              "src": "@openzeppelin\\contracts-upgradeable\\utils\\ReentrancyGuardUpgradeable.sol:43",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.ERC721URIStorage": [
+            {
+              "contract": "ERC721URIStorageUpgradeable",
+              "label": "_tokenURIs",
+              "type": "t_mapping(t_uint256,t_string_storage)",
+              "src": "@openzeppelin\\contracts-upgradeable\\token\\ERC721\\extensions\\ERC721URIStorageUpgradeable.sol:23",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.ERC721": [
+            {
+              "contract": "ERC721Upgradeable",
+              "label": "_name",
+              "type": "t_string_storage",
+              "src": "@openzeppelin\\contracts-upgradeable\\token\\ERC721\\ERC721Upgradeable.sol:27",
+              "offset": 0,
+              "slot": "0"
+            },
+            {
+              "contract": "ERC721Upgradeable",
+              "label": "_symbol",
+              "type": "t_string_storage",
+              "src": "@openzeppelin\\contracts-upgradeable\\token\\ERC721\\ERC721Upgradeable.sol:30",
+              "offset": 0,
+              "slot": "1"
+            },
+            {
+              "contract": "ERC721Upgradeable",
+              "label": "_owners",
+              "type": "t_mapping(t_uint256,t_address)",
+              "src": "@openzeppelin\\contracts-upgradeable\\token\\ERC721\\ERC721Upgradeable.sol:32",
+              "offset": 0,
+              "slot": "2"
+            },
+            {
+              "contract": "ERC721Upgradeable",
+              "label": "_balances",
+              "type": "t_mapping(t_address,t_uint256)",
+              "src": "@openzeppelin\\contracts-upgradeable\\token\\ERC721\\ERC721Upgradeable.sol:34",
+              "offset": 0,
+              "slot": "3"
+            },
+            {
+              "contract": "ERC721Upgradeable",
+              "label": "_tokenApprovals",
+              "type": "t_mapping(t_uint256,t_address)",
+              "src": "@openzeppelin\\contracts-upgradeable\\token\\ERC721\\ERC721Upgradeable.sol:36",
+              "offset": 0,
+              "slot": "4"
+            },
+            {
+              "contract": "ERC721Upgradeable",
+              "label": "_operatorApprovals",
+              "type": "t_mapping(t_address,t_mapping(t_address,t_bool))",
+              "src": "@openzeppelin\\contracts-upgradeable\\token\\ERC721\\ERC721Upgradeable.sol:38",
+              "offset": 0,
+              "slot": "5"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Ownable": [
+            {
+              "contract": "OwnableUpgradeable",
+              "label": "_owner",
+              "type": "t_address",
+              "src": "@openzeppelin\\contracts-upgradeable\\access\\OwnableUpgradeable.sol:24",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Initializable": [
+            {
+              "contract": "Initializable",
+              "label": "_initialized",
+              "type": "t_uint64",
+              "src": "@openzeppelin\\contracts\\proxy\\utils\\Initializable.sol:69",
+              "offset": 0,
+              "slot": "0"
+            },
+            {
+              "contract": "Initializable",
+              "label": "_initializing",
+              "type": "t_bool",
+              "src": "@openzeppelin\\contracts\\proxy\\utils\\Initializable.sol:73",
+              "offset": 8,
+              "slot": "0"
+            }
+          ]
+        }
+      }
+    },
+    "36f94b0502984da5e1c04799ae260759b49ab6f59f65a7a40c61816dffaf3c13": {
+      "address": "0x43fdF8C8168cF2dB321D6A404f9D67e9B1cf38e9",
+      "txHash": "0x0af823c7871c8983e30e21f4d86de2d3151e7e4b9305538563efd274527c2ac3",
+      "layout": {
+        "solcVersion": "0.8.28",
+        "storage": [
+          {
+            "label": "users",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_mapping(t_address,t_struct(UserStruct)10156_storage)",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:40"
+          },
+          {
+            "label": "stable",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_contract(IERC20)2794",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:42"
+          },
+          {
+            "label": "isAuthorized",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:44"
+          },
+          {
+            "label": "tokenIdToReceivePayment",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_array(t_uint256)dyn_storage",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:45"
+          },
+          {
+            "label": "tokenIdToReceivePaymentPendings",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_array(t_uint256)dyn_storage",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:46"
+          },
+          {
+            "label": "totalWeightNftToReceivePayment",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_uint256",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:48"
+          },
+          {
+            "label": "totalWeightNftToReceivePaymentPending",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_uint256",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:49"
+          },
+          {
+            "label": "isDistributePeriod",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_bool",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:51"
+          },
+          {
+            "label": "valueToDistribute",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_uint256",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:52"
+          },
+          {
+            "label": "indexPaid",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_uint256",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:54"
+          },
+          {
+            "label": "valuePaidInDistribution",
+            "offset": 0,
+            "slot": "10",
+            "type": "t_uint256",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:55"
+          },
+          {
+            "label": "alreadyDistributed",
+            "offset": 0,
+            "slot": "11",
+            "type": "t_bool",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:56"
+          },
+          {
+            "label": "batchProcessing",
+            "offset": 0,
+            "slot": "12",
+            "type": "t_uint256",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:57"
+          },
+          {
+            "label": "actualTokenId",
+            "offset": 0,
+            "slot": "13",
+            "type": "t_uint256",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:58"
+          },
+          {
+            "label": "feeManager",
+            "offset": 0,
+            "slot": "14",
+            "type": "t_contract(IManager)10135",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:59"
+          },
+          {
+            "label": "newPool",
+            "offset": 0,
+            "slot": "15",
+            "type": "t_address",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:60"
+          },
+          {
+            "label": "oldPool",
+            "offset": 0,
+            "slot": "16",
+            "type": "t_address",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:61"
+          },
+          {
+            "label": "isMint",
+            "offset": 20,
+            "slot": "16",
+            "type": "t_bool",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:62"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_bool))": {
+            "label": "mapping(address => mapping(address => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_address)": {
+            "label": "mapping(uint256 => address)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_string_storage)": {
+            "label": "mapping(uint256 => string)",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(ERC721Storage)131_storage": {
+            "label": "struct ERC721Upgradeable.ERC721Storage",
+            "members": [
+              {
+                "label": "_name",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_symbol",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "_owners",
+                "type": "t_mapping(t_uint256,t_address)",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "_balances",
+                "type": "t_mapping(t_address,t_uint256)",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "_tokenApprovals",
+                "type": "t_mapping(t_uint256,t_address)",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "_operatorApprovals",
+                "type": "t_mapping(t_address,t_mapping(t_address,t_bool))",
+                "offset": 0,
+                "slot": "5"
+              }
+            ],
+            "numberOfBytes": "192"
+          },
+          "t_struct(ERC721URIStorageStorage)438_storage": {
+            "label": "struct ERC721URIStorageUpgradeable.ERC721URIStorageStorage",
+            "members": [
+              {
+                "label": "_tokenURIs",
+                "type": "t_mapping(t_uint256,t_string_storage)",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(InitializableStorage)865_storage": {
+            "label": "struct Initializable.InitializableStorage",
+            "members": [
+              {
+                "label": "_initialized",
+                "type": "t_uint64",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_initializing",
+                "type": "t_bool",
+                "offset": 8,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(OwnableStorage)13_storage": {
+            "label": "struct OwnableUpgradeable.OwnableStorage",
+            "members": [
+              {
+                "label": "_owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(ReentrancyGuardStorage)533_storage": {
+            "label": "struct ReentrancyGuardUpgradeable.ReentrancyGuardStorage",
+            "members": [
+              {
+                "label": "_status",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint64": {
+            "label": "uint64",
+            "numberOfBytes": "8"
+          },
+          "t_array(t_uint256)dyn_storage": {
+            "label": "uint256[]",
+            "numberOfBytes": "32"
+          },
+          "t_contract(IERC20)2794": {
+            "label": "contract IERC20",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IManager)10135": {
+            "label": "contract IManager",
+            "numberOfBytes": "20"
+          },
+          "t_mapping(t_address,t_struct(UserStruct)10156_storage)": {
+            "label": "mapping(address => struct UserStruct)",
+            "numberOfBytes": "32"
+          },
+          "t_struct(UserStruct)10156_storage": {
+            "label": "struct UserStruct",
+            "members": [
+              {
+                "label": "totalWeight",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "valueReceived",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              }
+            ],
+            "numberOfBytes": "64"
+          }
+        },
+        "namespaces": {
+          "erc7201:openzeppelin.storage.ReentrancyGuard": [
+            {
+              "contract": "ReentrancyGuardUpgradeable",
+              "label": "_status",
+              "type": "t_uint256",
+              "src": "@openzeppelin\\contracts-upgradeable\\utils\\ReentrancyGuardUpgradeable.sol:43",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.ERC721URIStorage": [
+            {
+              "contract": "ERC721URIStorageUpgradeable",
+              "label": "_tokenURIs",
+              "type": "t_mapping(t_uint256,t_string_storage)",
+              "src": "@openzeppelin\\contracts-upgradeable\\token\\ERC721\\extensions\\ERC721URIStorageUpgradeable.sol:23",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.ERC721": [
+            {
+              "contract": "ERC721Upgradeable",
+              "label": "_name",
+              "type": "t_string_storage",
+              "src": "@openzeppelin\\contracts-upgradeable\\token\\ERC721\\ERC721Upgradeable.sol:27",
+              "offset": 0,
+              "slot": "0"
+            },
+            {
+              "contract": "ERC721Upgradeable",
+              "label": "_symbol",
+              "type": "t_string_storage",
+              "src": "@openzeppelin\\contracts-upgradeable\\token\\ERC721\\ERC721Upgradeable.sol:30",
+              "offset": 0,
+              "slot": "1"
+            },
+            {
+              "contract": "ERC721Upgradeable",
+              "label": "_owners",
+              "type": "t_mapping(t_uint256,t_address)",
+              "src": "@openzeppelin\\contracts-upgradeable\\token\\ERC721\\ERC721Upgradeable.sol:32",
+              "offset": 0,
+              "slot": "2"
+            },
+            {
+              "contract": "ERC721Upgradeable",
+              "label": "_balances",
+              "type": "t_mapping(t_address,t_uint256)",
+              "src": "@openzeppelin\\contracts-upgradeable\\token\\ERC721\\ERC721Upgradeable.sol:34",
+              "offset": 0,
+              "slot": "3"
+            },
+            {
+              "contract": "ERC721Upgradeable",
+              "label": "_tokenApprovals",
+              "type": "t_mapping(t_uint256,t_address)",
+              "src": "@openzeppelin\\contracts-upgradeable\\token\\ERC721\\ERC721Upgradeable.sol:36",
+              "offset": 0,
+              "slot": "4"
+            },
+            {
+              "contract": "ERC721Upgradeable",
+              "label": "_operatorApprovals",
+              "type": "t_mapping(t_address,t_mapping(t_address,t_bool))",
+              "src": "@openzeppelin\\contracts-upgradeable\\token\\ERC721\\ERC721Upgradeable.sol:38",
+              "offset": 0,
+              "slot": "5"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Ownable": [
+            {
+              "contract": "OwnableUpgradeable",
+              "label": "_owner",
+              "type": "t_address",
+              "src": "@openzeppelin\\contracts-upgradeable\\access\\OwnableUpgradeable.sol:24",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Initializable": [
+            {
+              "contract": "Initializable",
+              "label": "_initialized",
+              "type": "t_uint64",
+              "src": "@openzeppelin\\contracts\\proxy\\utils\\Initializable.sol:69",
+              "offset": 0,
+              "slot": "0"
+            },
+            {
+              "contract": "Initializable",
+              "label": "_initializing",
+              "type": "t_bool",
+              "src": "@openzeppelin\\contracts\\proxy\\utils\\Initializable.sol:73",
+              "offset": 8,
+              "slot": "0"
+            }
+          ]
+        }
+      }
+    },
+    "2d32295f070cd7dbe2b5712ce833c77ff9b430231895153a6a7ec9c870186965": {
+      "address": "0xC39eF0F9010b13094852C5182ceB8DD66fba7F68",
+      "txHash": "0xfe54ad3f2d0eaa9a8c05b395469993a4c4a6ccae1bd093b82cf4e72cbaccf700",
+      "layout": {
+        "solcVersion": "0.8.28",
+        "storage": [
+          {
+            "label": "users",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_mapping(t_address,t_struct(UserStruct)10156_storage)",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:40"
+          },
+          {
+            "label": "stable",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_contract(IERC20)2794",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:42"
+          },
+          {
+            "label": "isAuthorized",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:44"
+          },
+          {
+            "label": "tokenIdToReceivePayment",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_array(t_uint256)dyn_storage",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:45"
+          },
+          {
+            "label": "tokenIdToReceivePaymentPendings",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_array(t_uint256)dyn_storage",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:46"
+          },
+          {
+            "label": "totalWeightNftToReceivePayment",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_uint256",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:48"
+          },
+          {
+            "label": "totalWeightNftToReceivePaymentPending",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_uint256",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:49"
+          },
+          {
+            "label": "isDistributePeriod",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_bool",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:51"
+          },
+          {
+            "label": "valueToDistribute",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_uint256",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:52"
+          },
+          {
+            "label": "indexPaid",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_uint256",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:54"
+          },
+          {
+            "label": "valuePaidInDistribution",
+            "offset": 0,
+            "slot": "10",
+            "type": "t_uint256",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:55"
+          },
+          {
+            "label": "alreadyDistributed",
+            "offset": 0,
+            "slot": "11",
+            "type": "t_bool",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:56"
+          },
+          {
+            "label": "batchProcessing",
+            "offset": 0,
+            "slot": "12",
+            "type": "t_uint256",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:57"
+          },
+          {
+            "label": "actualTokenId",
+            "offset": 0,
+            "slot": "13",
+            "type": "t_uint256",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:58"
+          },
+          {
+            "label": "feeManager",
+            "offset": 0,
+            "slot": "14",
+            "type": "t_contract(IManager)10135",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:59"
+          },
+          {
+            "label": "newPool",
+            "offset": 0,
+            "slot": "15",
+            "type": "t_address",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:60"
+          },
+          {
+            "label": "oldPool",
+            "offset": 0,
+            "slot": "16",
+            "type": "t_address",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:61"
+          },
+          {
+            "label": "isMint",
+            "offset": 20,
+            "slot": "16",
+            "type": "t_bool",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:62"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_bool))": {
+            "label": "mapping(address => mapping(address => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_address)": {
+            "label": "mapping(uint256 => address)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_string_storage)": {
+            "label": "mapping(uint256 => string)",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(ERC721Storage)131_storage": {
+            "label": "struct ERC721Upgradeable.ERC721Storage",
+            "members": [
+              {
+                "label": "_name",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_symbol",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "_owners",
+                "type": "t_mapping(t_uint256,t_address)",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "_balances",
+                "type": "t_mapping(t_address,t_uint256)",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "_tokenApprovals",
+                "type": "t_mapping(t_uint256,t_address)",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "_operatorApprovals",
+                "type": "t_mapping(t_address,t_mapping(t_address,t_bool))",
+                "offset": 0,
+                "slot": "5"
+              }
+            ],
+            "numberOfBytes": "192"
+          },
+          "t_struct(ERC721URIStorageStorage)438_storage": {
+            "label": "struct ERC721URIStorageUpgradeable.ERC721URIStorageStorage",
+            "members": [
+              {
+                "label": "_tokenURIs",
+                "type": "t_mapping(t_uint256,t_string_storage)",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(InitializableStorage)865_storage": {
+            "label": "struct Initializable.InitializableStorage",
+            "members": [
+              {
+                "label": "_initialized",
+                "type": "t_uint64",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_initializing",
+                "type": "t_bool",
+                "offset": 8,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(OwnableStorage)13_storage": {
+            "label": "struct OwnableUpgradeable.OwnableStorage",
+            "members": [
+              {
+                "label": "_owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(ReentrancyGuardStorage)533_storage": {
+            "label": "struct ReentrancyGuardUpgradeable.ReentrancyGuardStorage",
+            "members": [
+              {
+                "label": "_status",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint64": {
+            "label": "uint64",
+            "numberOfBytes": "8"
+          },
+          "t_array(t_uint256)dyn_storage": {
+            "label": "uint256[]",
+            "numberOfBytes": "32"
+          },
+          "t_contract(IERC20)2794": {
+            "label": "contract IERC20",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IManager)10135": {
+            "label": "contract IManager",
+            "numberOfBytes": "20"
+          },
+          "t_mapping(t_address,t_struct(UserStruct)10156_storage)": {
+            "label": "mapping(address => struct UserStruct)",
+            "numberOfBytes": "32"
+          },
+          "t_struct(UserStruct)10156_storage": {
+            "label": "struct UserStruct",
+            "members": [
+              {
+                "label": "totalWeight",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "valueReceived",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              }
+            ],
+            "numberOfBytes": "64"
+          }
+        },
+        "namespaces": {
+          "erc7201:openzeppelin.storage.ReentrancyGuard": [
+            {
+              "contract": "ReentrancyGuardUpgradeable",
+              "label": "_status",
+              "type": "t_uint256",
+              "src": "@openzeppelin\\contracts-upgradeable\\utils\\ReentrancyGuardUpgradeable.sol:43",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.ERC721URIStorage": [
+            {
+              "contract": "ERC721URIStorageUpgradeable",
+              "label": "_tokenURIs",
+              "type": "t_mapping(t_uint256,t_string_storage)",
+              "src": "@openzeppelin\\contracts-upgradeable\\token\\ERC721\\extensions\\ERC721URIStorageUpgradeable.sol:23",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.ERC721": [
+            {
+              "contract": "ERC721Upgradeable",
+              "label": "_name",
+              "type": "t_string_storage",
+              "src": "@openzeppelin\\contracts-upgradeable\\token\\ERC721\\ERC721Upgradeable.sol:27",
+              "offset": 0,
+              "slot": "0"
+            },
+            {
+              "contract": "ERC721Upgradeable",
+              "label": "_symbol",
+              "type": "t_string_storage",
+              "src": "@openzeppelin\\contracts-upgradeable\\token\\ERC721\\ERC721Upgradeable.sol:30",
+              "offset": 0,
+              "slot": "1"
+            },
+            {
+              "contract": "ERC721Upgradeable",
+              "label": "_owners",
+              "type": "t_mapping(t_uint256,t_address)",
+              "src": "@openzeppelin\\contracts-upgradeable\\token\\ERC721\\ERC721Upgradeable.sol:32",
+              "offset": 0,
+              "slot": "2"
+            },
+            {
+              "contract": "ERC721Upgradeable",
+              "label": "_balances",
+              "type": "t_mapping(t_address,t_uint256)",
+              "src": "@openzeppelin\\contracts-upgradeable\\token\\ERC721\\ERC721Upgradeable.sol:34",
+              "offset": 0,
+              "slot": "3"
+            },
+            {
+              "contract": "ERC721Upgradeable",
+              "label": "_tokenApprovals",
+              "type": "t_mapping(t_uint256,t_address)",
+              "src": "@openzeppelin\\contracts-upgradeable\\token\\ERC721\\ERC721Upgradeable.sol:36",
+              "offset": 0,
+              "slot": "4"
+            },
+            {
+              "contract": "ERC721Upgradeable",
+              "label": "_operatorApprovals",
+              "type": "t_mapping(t_address,t_mapping(t_address,t_bool))",
+              "src": "@openzeppelin\\contracts-upgradeable\\token\\ERC721\\ERC721Upgradeable.sol:38",
+              "offset": 0,
+              "slot": "5"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Ownable": [
+            {
+              "contract": "OwnableUpgradeable",
+              "label": "_owner",
+              "type": "t_address",
+              "src": "@openzeppelin\\contracts-upgradeable\\access\\OwnableUpgradeable.sol:24",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Initializable": [
+            {
+              "contract": "Initializable",
+              "label": "_initialized",
+              "type": "t_uint64",
+              "src": "@openzeppelin\\contracts\\proxy\\utils\\Initializable.sol:69",
+              "offset": 0,
+              "slot": "0"
+            },
+            {
+              "contract": "Initializable",
+              "label": "_initializing",
+              "type": "t_bool",
+              "src": "@openzeppelin\\contracts\\proxy\\utils\\Initializable.sol:73",
+              "offset": 8,
+              "slot": "0"
+            }
+          ]
+        }
+      }
+    },
+    "17e54309855b331b94d5e1f5826b6be06fc1f0646b8a64b8c69b8b13a6f0ec27": {
+      "address": "0xCA60E9Ff722f2150F33B5A5d0a90F99764F7170A",
+      "txHash": "0xa5f264f071aa16fe6202725fd31f7a4de1ae293feb7a3a68d10dd00f4fbc38fd",
+      "layout": {
+        "solcVersion": "0.8.28",
+        "storage": [
+          {
+            "label": "users",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_mapping(t_address,t_struct(UserStruct)10156_storage)",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:40"
+          },
+          {
+            "label": "stable",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_contract(IERC20)2794",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:42"
+          },
+          {
+            "label": "isAuthorized",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:44"
+          },
+          {
+            "label": "tokenIdToReceivePayment",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_array(t_uint256)dyn_storage",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:45"
+          },
+          {
+            "label": "tokenIdToReceivePaymentPendings",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_array(t_uint256)dyn_storage",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:46"
+          },
+          {
+            "label": "totalWeightNftToReceivePayment",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_uint256",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:48"
+          },
+          {
+            "label": "totalWeightNftToReceivePaymentPending",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_uint256",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:49"
+          },
+          {
+            "label": "isDistributePeriod",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_bool",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:51"
+          },
+          {
+            "label": "valueToDistribute",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_uint256",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:52"
+          },
+          {
+            "label": "indexPaid",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_uint256",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:54"
+          },
+          {
+            "label": "valuePaidInDistribution",
+            "offset": 0,
+            "slot": "10",
+            "type": "t_uint256",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:55"
+          },
+          {
+            "label": "alreadyDistributed",
+            "offset": 0,
+            "slot": "11",
+            "type": "t_bool",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:56"
+          },
+          {
+            "label": "batchProcessing",
+            "offset": 0,
+            "slot": "12",
+            "type": "t_uint256",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:57"
+          },
+          {
+            "label": "actualTokenId",
+            "offset": 0,
+            "slot": "13",
+            "type": "t_uint256",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:58"
+          },
+          {
+            "label": "feeManager",
+            "offset": 0,
+            "slot": "14",
+            "type": "t_contract(IManager)10135",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:59"
+          },
+          {
+            "label": "newPool",
+            "offset": 0,
+            "slot": "15",
+            "type": "t_address",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:60"
+          },
+          {
+            "label": "oldPool",
+            "offset": 0,
+            "slot": "16",
+            "type": "t_address",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:61"
+          },
+          {
+            "label": "isMint",
+            "offset": 20,
+            "slot": "16",
+            "type": "t_bool",
+            "contract": "PoolGamesNft",
+            "src": "contracts\\PoolGamesNft.sol:62"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_bool))": {
+            "label": "mapping(address => mapping(address => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_address)": {
+            "label": "mapping(uint256 => address)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_string_storage)": {
+            "label": "mapping(uint256 => string)",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(ERC721Storage)131_storage": {
+            "label": "struct ERC721Upgradeable.ERC721Storage",
+            "members": [
+              {
+                "label": "_name",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_symbol",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "_owners",
+                "type": "t_mapping(t_uint256,t_address)",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "_balances",
+                "type": "t_mapping(t_address,t_uint256)",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "_tokenApprovals",
+                "type": "t_mapping(t_uint256,t_address)",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "_operatorApprovals",
+                "type": "t_mapping(t_address,t_mapping(t_address,t_bool))",
+                "offset": 0,
+                "slot": "5"
+              }
+            ],
+            "numberOfBytes": "192"
+          },
+          "t_struct(ERC721URIStorageStorage)438_storage": {
+            "label": "struct ERC721URIStorageUpgradeable.ERC721URIStorageStorage",
+            "members": [
+              {
+                "label": "_tokenURIs",
+                "type": "t_mapping(t_uint256,t_string_storage)",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(InitializableStorage)865_storage": {
+            "label": "struct Initializable.InitializableStorage",
+            "members": [
+              {
+                "label": "_initialized",
+                "type": "t_uint64",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_initializing",
+                "type": "t_bool",
+                "offset": 8,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(OwnableStorage)13_storage": {
+            "label": "struct OwnableUpgradeable.OwnableStorage",
+            "members": [
+              {
+                "label": "_owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(ReentrancyGuardStorage)533_storage": {
+            "label": "struct ReentrancyGuardUpgradeable.ReentrancyGuardStorage",
+            "members": [
+              {
+                "label": "_status",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint64": {
+            "label": "uint64",
+            "numberOfBytes": "8"
+          },
+          "t_array(t_uint256)dyn_storage": {
+            "label": "uint256[]",
+            "numberOfBytes": "32"
+          },
+          "t_contract(IERC20)2794": {
+            "label": "contract IERC20",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IManager)10135": {
+            "label": "contract IManager",
+            "numberOfBytes": "20"
+          },
+          "t_mapping(t_address,t_struct(UserStruct)10156_storage)": {
+            "label": "mapping(address => struct UserStruct)",
+            "numberOfBytes": "32"
+          },
+          "t_struct(UserStruct)10156_storage": {
+            "label": "struct UserStruct",
+            "members": [
+              {
+                "label": "totalWeight",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "valueReceived",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              }
+            ],
+            "numberOfBytes": "64"
+          }
+        },
+        "namespaces": {
+          "erc7201:openzeppelin.storage.ReentrancyGuard": [
+            {
+              "contract": "ReentrancyGuardUpgradeable",
+              "label": "_status",
+              "type": "t_uint256",
+              "src": "@openzeppelin\\contracts-upgradeable\\utils\\ReentrancyGuardUpgradeable.sol:43",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.ERC721URIStorage": [
+            {
+              "contract": "ERC721URIStorageUpgradeable",
+              "label": "_tokenURIs",
+              "type": "t_mapping(t_uint256,t_string_storage)",
+              "src": "@openzeppelin\\contracts-upgradeable\\token\\ERC721\\extensions\\ERC721URIStorageUpgradeable.sol:23",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.ERC721": [
+            {
+              "contract": "ERC721Upgradeable",
+              "label": "_name",
+              "type": "t_string_storage",
+              "src": "@openzeppelin\\contracts-upgradeable\\token\\ERC721\\ERC721Upgradeable.sol:27",
+              "offset": 0,
+              "slot": "0"
+            },
+            {
+              "contract": "ERC721Upgradeable",
+              "label": "_symbol",
+              "type": "t_string_storage",
+              "src": "@openzeppelin\\contracts-upgradeable\\token\\ERC721\\ERC721Upgradeable.sol:30",
+              "offset": 0,
+              "slot": "1"
+            },
+            {
+              "contract": "ERC721Upgradeable",
+              "label": "_owners",
+              "type": "t_mapping(t_uint256,t_address)",
+              "src": "@openzeppelin\\contracts-upgradeable\\token\\ERC721\\ERC721Upgradeable.sol:32",
+              "offset": 0,
+              "slot": "2"
+            },
+            {
+              "contract": "ERC721Upgradeable",
+              "label": "_balances",
+              "type": "t_mapping(t_address,t_uint256)",
+              "src": "@openzeppelin\\contracts-upgradeable\\token\\ERC721\\ERC721Upgradeable.sol:34",
+              "offset": 0,
+              "slot": "3"
+            },
+            {
+              "contract": "ERC721Upgradeable",
+              "label": "_tokenApprovals",
+              "type": "t_mapping(t_uint256,t_address)",
+              "src": "@openzeppelin\\contracts-upgradeable\\token\\ERC721\\ERC721Upgradeable.sol:36",
+              "offset": 0,
+              "slot": "4"
+            },
+            {
+              "contract": "ERC721Upgradeable",
+              "label": "_operatorApprovals",
+              "type": "t_mapping(t_address,t_mapping(t_address,t_bool))",
+              "src": "@openzeppelin\\contracts-upgradeable\\token\\ERC721\\ERC721Upgradeable.sol:38",
+              "offset": 0,
+              "slot": "5"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Ownable": [
+            {
+              "contract": "OwnableUpgradeable",
+              "label": "_owner",
+              "type": "t_address",
+              "src": "@openzeppelin\\contracts-upgradeable\\access\\OwnableUpgradeable.sol:24",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Initializable": [
+            {
+              "contract": "Initializable",
+              "label": "_initialized",
+              "type": "t_uint64",
+              "src": "@openzeppelin\\contracts\\proxy\\utils\\Initializable.sol:69",
+              "offset": 0,
+              "slot": "0"
+            },
+            {
+              "contract": "Initializable",
+              "label": "_initializing",
+              "type": "t_bool",
+              "src": "@openzeppelin\\contracts\\proxy\\utils\\Initializable.sol:73",
+              "offset": 8,
+              "slot": "0"
+            }
+          ]
+        }
+      }
+    },
+    "4749718a7939af0eabebe11c759f6a38ace41a96b62e20cbce4a015b3958a3ab": {
+      "address": "0xACd499955691903A5Dd8614148d886455ce2Fd8c",
+      "txHash": "0x9ee2d386595b7fd9b65251eaf7810428702cec5f569147545bda34866ea3338f",
       "layout": {
         "solcVersion": "0.8.28",
         "storage": [

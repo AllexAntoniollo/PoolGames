@@ -64,6 +64,7 @@ contract TreasuryPool is
     mapping(address => uint) public totalProfitToClaim;
     mapping(address => uint) public totalUnilevelProfit;
     IManager feeManager;
+    mapping(address => mapping(uint => uint)) public partialClaimed;
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
@@ -280,20 +281,17 @@ contract TreasuryPool is
             "Contribution already finished"
         );
         uint half = donation.deposit / 2;
-        uint fee = ((half + donation.valueClaimed) * 20) / 100;
+        uint fee = ((half + donation.valueClaimed) * 70) / 100;
 
         uint refundAmount = donation.valueClaimed >= half
             ? 0
             : half - donation.valueClaimed;
         valueInPool[msg.sender] -= donation.deposit;
+        uint totalProfit = donation.balance - donation.deposit;
+        uint claimed = partialClaimed[msg.sender][index];
 
-        uint profit = donation.balance - donation.deposit;
-
-        if (totalProfitToClaim[msg.sender] >= profit) {
-            totalProfitToClaim[msg.sender] -= profit;
-        } else {
-            totalProfitToClaim[msg.sender] = 0;
-        }
+        uint unclaimed = totalProfit - claimed;
+        totalProfitToClaim[msg.sender] -= unclaimed;
 
         users[msg.sender][index].daysPaid = donation.maxPeriod;
 
@@ -330,7 +328,7 @@ contract TreasuryPool is
             (users[user][index].daysPaid * 1 days);
         uint totalValueInUSD = calculateValue(user, index, periodElapsed);
         users[user][index].valueClaimed += totalValueInUSD;
-
+        partialClaimed[user][index] += totalValueInUSD;
         if (totalUnilevelProfit[user] >= totalValueInUSD) {
             totalUnilevelProfit[user] -= totalValueInUSD;
             totalProfitToClaim[user] -= totalValueInUSD;
