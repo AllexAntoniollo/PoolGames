@@ -127,8 +127,10 @@ contract TreasuryPool is
         return effectiveInterval - timeSinceLastClaim;
     }
     function increaseProfitUnilevel(address user, uint amount) external {
-        require(msg.sender == address(userContract));
-
+        require(
+            msg.sender == address(userContract),
+            "Unauthorized: caller is not userContract"
+        );
         totalUnilevelProfit[user] += amount;
         if (totalUnilevelProfit[user] > totalProfitToClaim[user]) {
             totalUnilevelProfit[user] = totalProfitToClaim[user];

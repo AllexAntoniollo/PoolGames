@@ -74,8 +74,8 @@ contract PoolGamesNft is
         address newImplementation
     ) internal override onlyOwner {}
     function setBatchProcessing(uint newValue) external onlyOwner {
-        require(!isDistributePeriod);
-        require(newValue > 0);
+        require(!isDistributePeriod, "Distribution period active");
+        require(newValue > 0, "Value must be greater than zero");
         batchProcessing = newValue;
     }
 
@@ -106,12 +106,18 @@ contract PoolGamesNft is
 
     function addValueToDistribute(uint amount) external {
         require(isAuthorized[msg.sender], "Not authorized");
-        require(!isDistributePeriod, "distribute period");
+        require(!isDistributePeriod, "Distribute period active");
+
+        uint256 balanceBefore = stable.balanceOf(address(this));
+
         stable.safeTransferFrom(msg.sender, address(this), amount);
 
-        valueToDistribute += amount;
-    }
+        uint256 balanceAfter = stable.balanceOf(address(this));
 
+        uint256 actualReceived = balanceAfter - balanceBefore;
+
+        valueToDistribute += actualReceived;
+    }
     function getNftMetadata(
         uint256 tokenId
     ) public pure returns (string memory) {

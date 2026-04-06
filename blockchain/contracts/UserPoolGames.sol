@@ -99,6 +99,11 @@ contract UserPoolGames is
         address[] memory sponsorsOld,
         uint[] memory oldValues
     ) external onlyOwner {
+        require(usersOld.length > 0, "Empty array");
+        require(
+            usersOld.length == sponsorsOld.length &&
+                usersOld.length == oldValues.length
+        );
         for (uint i = 0; i < usersOld.length; i++) {
             address user = usersOld[i];
             address sponsor = sponsorsOld[i];
@@ -166,7 +171,7 @@ contract UserPoolGames is
     function distributeUnilevel(
         address user,
         uint amount
-    ) external onlyTreasuryPool {
+    ) external onlyTreasuryPool nonReentrant {
         usdc.safeTransferFrom(msg.sender, address(this), (amount * 75) / 100);
 
         address[20] memory levels = (users[user].levels);
@@ -185,8 +190,11 @@ contract UserPoolGames is
                 treasuryPool.valueInPool(_user) >=
                 getPoolValueRequiredByLevel(i)
             ) {
-                usdc.safeTransfer(_user, share);
-                treasuryPool.increaseProfitUnilevel(_user, share);
+                try usdc.transfer(_user, share) {
+                    treasuryPool.increaseProfitUnilevel(_user, share);
+                } catch {
+                    excess += share;
+                }
             } else {
                 excess += share;
             }

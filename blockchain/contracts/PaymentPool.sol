@@ -22,12 +22,13 @@ abstract contract PaymentPool is Ownable2Step, ReentrancyGuard {
     mapping(address => mapping(address => uint256)) public totalClaimed;
 
     address[] public recipients;
-    uint8 public totalRecipients;
+    uint public totalRecipients;
     uint24 public totalPercentage;
     uint24 public constant PRECISION = 1e6;
     mapping(address => uint) public balanceFree;
     mapping(address => string) public tokenNames;
     mapping(address => bool) public isRegistered;
+    mapping(address => bool) public isTokenRegistered;
 
     event RecipientAdded(address indexed newRecipient, uint24 percentage);
     event RecipientPercentageUpdated(
@@ -39,7 +40,7 @@ abstract contract PaymentPool is Ownable2Step, ReentrancyGuard {
     function removeToken(address token) external onlyOwner {
         require(token != address(0), "Token address cannot be zero");
         require(isValidToken(token), "Token is not registered");
-
+        isTokenRegistered[token] = false;
         uint indexToRemove;
         bool found = false;
 
@@ -62,7 +63,9 @@ abstract contract PaymentPool is Ownable2Step, ReentrancyGuard {
     function addToken(address token, string calldata name) external onlyOwner {
         require(token != address(0), "Token address cannot be zero");
         require(bytes(name).length > 0, "Token name cannot be empty");
+        require(!isTokenRegistered[token], "Token is already registered");
         tokenNames[token] = name;
+        isTokenRegistered[token] = true;
         tokens.push(IERC20(token));
     }
 
@@ -80,12 +83,20 @@ abstract contract PaymentPool is Ownable2Step, ReentrancyGuard {
         address tokenContract
     ) external nonReentrant {
         require(isValidToken(tokenContract), "Token contract not registered");
+
+        uint256 balanceBefore = IERC20(tokenContract).balanceOf(address(this));
+
         IERC20(tokenContract).safeTransferFrom(
             msg.sender,
             address(this),
             amount
         );
-        balanceFree[tokenContract] += amount;
+
+        uint256 balanceAfter = IERC20(tokenContract).balanceOf(address(this));
+
+        uint256 actualReceived = balanceAfter - balanceBefore;
+
+        balanceFree[tokenContract] += actualReceived;
     }
 
     function claim() external nonReentrant {
