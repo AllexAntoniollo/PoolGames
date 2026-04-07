@@ -273,35 +273,7 @@ contract TreasuryPool is
             ((users[user][index].balance - users[user][index].deposit) *
                 daysElapsed) / users[user][index].maxPeriod;
     }
-    function cancelContribution(uint index) external nonReentrant {
-        require(index < users[msg.sender].length, "Invalid index");
 
-        UserDonation memory donation = users[msg.sender][index];
-
-        require(
-            donation.daysPaid < donation.maxPeriod,
-            "Contribution already finished"
-        );
-        uint half = donation.deposit / 2;
-        uint fee = ((half + donation.valueClaimed) * 70) / 100;
-
-        uint refundAmount = donation.valueClaimed >= half
-            ? 0
-            : half - donation.valueClaimed;
-        valueInPool[msg.sender] -= donation.deposit;
-        uint totalProfit = donation.balance - donation.deposit;
-        uint claimed = partialClaimed[msg.sender][index];
-
-        uint unclaimed = totalProfit - claimed;
-        totalProfitToClaim[msg.sender] -= unclaimed;
-
-        users[msg.sender][index].daysPaid = donation.maxPeriod;
-
-        usdc.safeTransfer(msg.sender, refundAmount);
-        usdc.approve(address(feeManager), fee);
-        feeManager.incrementBalance(fee, address(usdc));
-        emit UserCanceled(msg.sender, refundAmount);
-    }
     function claimContribution(address user, uint index) external nonReentrant {
         require(msg.sender == user || botWallet == msg.sender);
 
